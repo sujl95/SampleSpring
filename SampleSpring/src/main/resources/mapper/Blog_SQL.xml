@@ -166,6 +166,6 @@
 				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
        		   BM.BM_NM,b.bm_no,B.B_HIT
 		FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = bm.bm_no  
-		WHERE B.B_NO = 11
+		WHERE B.B_NO = 1
 	</select>
 </mapper>

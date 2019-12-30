@@ -77,6 +77,7 @@ function reloadList() {
 		data : params,
 		success:function(result) {
 			redrawList(result.list);
+			redrawList1(result.data);
 			redrawPaging(result.pb);
 		},
 		error:function(request,status,error) {
@@ -133,7 +134,27 @@ function redrawList(list) {
 //  	$(".Blog_list_area").html(html);
 	
 }
-
+function redrawList1(data) {
+	var html ="";
+	console.log(data);
+	console.log(data.length);
+	
+	if(data.length == 0 ) {
+		html += "<tr>";
+		html += "<td colspan=\"2\">조회된 데이터가 없습니다.</td>";
+		html += "</tr>";
+	} else {
+			html += "<div name=\"" + data.B_NO + "\">";
+// 			html += "<td>" + list[i].B_NO +"</td>";
+			html += "" + data.B_TITLE +"<br/>";
+// 			html += "<td>" + list[i].BM_NM +"</td>";
+			html += "" + data.B_DT +"<br/>";
+			html += "" + data.B_HIT +"<br/>";
+	}
+	
+	$(".a").html(html);
+	
+}
 function redrawPaging(pb) {
 	var html ="";
 	//첫페이지
@@ -275,13 +296,15 @@ function redrawPaging(pb) {
 			<input type="hidden" name="no" value="${data.B_NO}"/>
 			<input type="hidden" name="bm_no" value="${data.BM_NO}"/>
 		</form>
-		번호 : ${data.B_NO}      <br/>
+		<div class="a">
+		번호 : ${data.B_NO}     <br/>
 		제목 : ${data.B_TITLE}   <br/>
 		가입일 : ${data.DT}      <br/>
 		작성자 : ${data.BM_NM}  <br/>
 		조회수 : ${data.B_HIT}     <br/>
 		- 내용  - <br/>
 		${data.B_CON} <br>
+		</div>
 		<c:choose>
 			<c:when test="${sBmNo eq data.BM_NO}"> 
 				<input type="button" value="목록" id="listBtn"/>

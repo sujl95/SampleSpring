@@ -171,8 +171,6 @@ public class BlogController {
 		iBlogService.updateHit(params);
 		HashMap<String,String> data = iBlogService.getData(params);
 		modelMap.put("data", data);
-		
-		
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
 		

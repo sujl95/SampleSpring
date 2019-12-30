@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+	<insert id="insertMem" parameterType="hashmap">
+		INSERT INTO MEM(MEM_NO , MEM_ID, MEM_PW, MEM_NM) 
+		VALUES(MEM_SEQ.NEXTVAL, #{idTxt},#{pwTxt},#{nmTxt}) 
+	</insert>
+	
+	<select id="getMem" parameterType="hashmap" resultType="hashmap">
+		SELECT MEM_NO, MEM_ID, MEM_NM
+		FROM MEM
+		WHERE MEM_ID = #{memId}
+		AND MEM_PW = #{memPw}
+	</select>
+	<select id="getId" parameterType="hashmap"
+		resultType="hashmap">
+		SELECT MEM_ID
+		FROM MEM
+        WHERE 1 = 1
+        AND mem_id LIKE 'sujl95'
+		<!-- <if test="idTxt != null and idTxt != ''">
+			AND mem_id LIKE 'sujl95'    
+		</if> -->
+
+	</select>
+	<select id="getIds" parameterType="hashmap"
+		resultType="String">
+		SELECT MEM_ID
+		FROM MEM
+        WHERE 1 = 1
+        
+		<if test="idTxt != null and idTxt != ''">
+			AND mem_id LIKE #{idTxt}    
+		</if>
+
+	</select>
+	<select id="Idcnt" parameterType="hashmap"
+		resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM MEM
+		WHERE
+		1 = 1
+		<if test="idTxt != null and idTxt != ''">
+			AND mem_id LIKE 'sujl95'    
+		</if>
+
+	</select>
+	<select id="getList" parameterType="hashmap"
+		resultType="hashmap">
+		SELECT T.NO, T.TITLE,T.DT, T.WRITER,T.HIT
+		FROM   (SELECT NO, TITLE, TO_CHAR(DT,'MM-DD') AS DT, WRITER,HIT,
+        ROW_NUMBER() OVER(ORDER BY NO DESC) AS RNUM
+        FROM TEST
+        WHERE 1 = 1
+        
+		<if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn == 0">
+					<!-- 제목 -->
+					AND TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 1">
+					<!-- 작성자 -->
+					AND WRITER LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 2">
+					<!-- 제목+작성자 -->
+					AND (TITLE LIKE '%' || #{searchTxt} || '%' OR WRITER LIKE '%' || #{searchTxt} || '%')
+
+				</when>
+			</choose>
+		</if>
+		) T
+		WHERE T.RNUM BETWEEN #{startCount} AND #{endCount}
+
+	</select>
+	
+	<select id="getListCnt" parameterType="hashmap"
+		resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM TEST
+		WHERE
+		1 = 1
+		<if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn == 0">
+					<!-- 제목 -->
+					AND TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 1">
+					<!-- 작성자 -->
+					AND WRITER LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 2">
+					<!-- 제목+작성자 -->
+					AND (TITLE LIKE '%' || #{searchTxt} || '%' OR WRITER LIKE '%' || #{searchTxt} || '%')
+
+				</when>
+			</choose>
+		</if>
+		ORDER BY NO DESC
+	</select>
+	
+	<select id="getData" 
+			parameterType="hashmap"
+			resultType="hashmap">
+			
+		SELECT NO, TITLE, CON, TO_CHAR(DT, 'YYYY-MM-DD') AS DT, 
+       		   WRITER,HIT
+		FROM TEST
+		WHERE NO = #{no}
+	</select>
+	
+	<update id="updateHit" parameterType="hashmap">
+		UPDATE TEST SET HIT = HIT + 1
+		WHERE NO = #{no}
+	</update>
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO TEST(NO , TITLE, WRITER, CON) 
+		VALUES(TEST_SEQ.NEXTVAL, #{title},#{writer},#{con}) 
+	</insert>
+	<update id="updateData" parameterType="hashmap">
+		UPDATE TEST SET TITLE =  #{title}, WRITER = #{writer}, CON =#{con}
+		WHERE NO = #{no}
+	</update>
+	<delete id="deleteData" parameterType="hashmap">
+		DELETE FROM TEST 
+		WHERE NO = #{no}
+	</delete>
+</mapper>

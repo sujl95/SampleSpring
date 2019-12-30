@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test2">
+	<select id="idCheck" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(*) AS CNT 
+		FROM BM 
+		WHERE BM_ID = #{bmId}		
+	</select>
+	<select id="insertBM" parameterType="hashmap" >
+		INSERT INTO BM(BM_NO, BM_ID, BM_PW, BM_NM) 
+		VALUES(BM_SEQ.NEXTVAL, #{bmId}, #{bmPw}, #{bmNm})
+	</select>
+	<select id="getBM" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO, BM_NM 
+		FROM BM
+		WHERE DEL_YN = 1
+		AND BM_ID = #{bmId}
+		AND BM_PW = #{bmPw}	
+	</select>
+	<select id="getBMM" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO,BM_ID, BM_NM 
+		FROM BM
+		WHERE DEL_YN = 1
+		AND BM_NO = #{bm_NO}	
+	</select>
+	<select id="getBCnt" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM B  INNER JOIN BM 
+		                ON B.BM_NO = BM.BM_NO
+		                AND BM.DEL_YN = 1
+		WHERE B.DEL_YN = 1
+		
+		<if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn eq 0">
+					AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+				<when test="searchGbn eq 1">
+					AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
+				</when>
+				<when test="searchGbn eq 2">
+					AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+		    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
+				</when>
+			</choose>
+		</if>
+	</select>
+	<select id="getB" parameterType="hashmap" resultType="hashmap">
+		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT
+		FROM(   SELECT B.B_NO,B.B_TITLE,BM.BM_NM,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
+				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
+				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
+		                B.B_NO DESC) AS RNUM
+		        FROM B  INNER JOIN BM 
+		                        ON B.BM_NO = BM.BM_NO
+		                        AND BM.DEL_YN = 1
+		        WHERE B.DEL_YN = 1
+		       <if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn eq 0">
+					AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+				<when test="searchGbn eq 1">
+					AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
+				</when>
+				<when test="searchGbn eq 2">
+					AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+		    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
+				</when>
+			</choose>
+		</if>
+		    )B
+		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
+	</select>
+	<select id="getMem" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO, BM_ID, BM_NM
+		FROM BM
+		WHERE BM_ID = #{bmId}
+		AND BM_PW = #{bmPw}
+	</select>
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
+		VALUES(B_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
+	</insert>
+	<update id="updateHit" parameterType="hashmap">
+		UPDATE B SET B_HIT = B_HIT + 1
+		WHERE B_NO =  #{no}
+	</update>
+	<select id="getData" parameterType="hashmap" resultType="hashmap">
+		  SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
+				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
+				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
+       		   BM.BM_NM,b.bm_no,B.B_HIT
+		FROM B B INNER JOIN BM BM ON B.BM_NO = bm.bm_no  
+		WHERE B.B_NO = #{no}
+	</select>
+	<update id="updateData" parameterType="hashmap">
+		UPDATE B SET B_TITLE =  #{title} , BM_NO = #{bm_no}, B_CON = #{con}
+		WHERE B_NO = #{no}
+	</update>
+	<update id="deleteData" parameterType="hashmap">
+		UPDATE B SET DEL_YN = 0
+		WHERE B_NO = #{no} 
+	</update>
+	<update id="updateBMData" parameterType="hashmap">
+		UPDATE BM SET BM_PW =  #{pwTxt} , BM_NM = #{nmTxt}
+		WHERE BM_NO = #{bmno}
+	</update>
+	<update id="deleteBMData" parameterType="hashmap">
+		UPDATE BM SET DEL_YN = 0
+		WHERE BM_NO = #{bmno}
+	</update>
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<update id="updatemData" parameterType="hashmap">
+		UPDATE BM SET BM_PW =  #{pwTxt} , BM_NM = #{nmTxt}
+		WHERE BM_NO = #{bmno}
+	</update>
+	<insert id="insertbData" parameterType="hashmap">
+		INSERT INTO BM (BM_NO,BM_ID,BM_PW,BM_NM,BM_JOIN,DEL_YN)
+		VALUES(BM_SEQ.NEXTVAL,#{idTxt},#{pwTxt},#{nmTxt},SYSDATE,1) 
+	</insert>
+	<select id="getmoMem" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO, BM_ID, BM_NM
+		FROM BM
+		WHERE BM_NO = #{bmNo}
+		
+	</select>
+	<select id="getMem" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO, BM_ID, BM_NM
+		FROM BM
+		WHERE BM_ID = #{bmId}
+		AND BM_PW = #{bmPw}
+	</select>
+	<select id="Idcnt" parameterType="hashmap"
+		resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM BM
+		WHERE
+		1 = 1
+		<if test="idTxt != null and idTxt != ''">
+			AND BM_id LIKE #{idTxt}
+		</if>
+
+	</select>
+	<select id="getList" parameterType="hashmap"
+		resultType="hashmap">
+		SELECT T.B_NO, T.B_TITLE,T.DT, T.BM_NM,T.B_HIT
+		FROM   (SELECT B_NO, B_TITLE, TO_CHAR(b_DT,'MM-DD') AS DT, BM_NM,B_HIT,
+		B.DEL_YN, ROW_NUMBER() OVER(ORDER BY B_NO ) AS RNUM
+		FROM B  INNER JOIN BM ON BM.BM_NO = B.BM_NO
+		WHERE 1 = 1 
+        AND B.DEL_YN = 1
+		<if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn == 0">
+					<!-- 제목 -->
+					AND B_TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 1">
+					<!-- 작성자 -->
+					AND BM_NM LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 2">
+					<!-- 제목+작성자 -->
+					AND (B_TITLE LIKE '%' || #{searchTxt} || '%' OR BM_NM LIKE '%' || #{searchTxt} || '%')
+
+				</when>
+			</choose>
+		</if>
+		) T 
+		WHERE T.RNUM BETWEEN #{startCount} AND #{endCount}  AND DEL_YN = 1
+
+	</select>
+	
+	<select id="getListCnt" parameterType="hashmap"
+		resultType="Integer">
+		SELECT COUNT(*) AS CNT
+		FROM (SELECT B_NO, B_TITLE, TO_CHAR(b_DT,'MM-DD') AS DT, BM_NM,B_HIT,
+		B.DEL_YN,
+		ROW_NUMBER() OVER(ORDER BY B_NO ) AS RNUM
+		FROM B  INNER JOIN BM ON BM.BM_NO = B.BM_NO
+		WHERE 1 = 1 
+		AND B.DEL_YN = 1
+		<if test="searchTxt != null and searchTxt != ''">
+			<choose>
+				<when test="searchGbn == 0">
+					<!-- 제목 -->
+					AND B_TITLE LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 1">
+					<!-- 작성자 -->
+					AND BM_NM LIKE '%' || #{searchTxt} || '%'
+				</when>
+
+				<when test="searchGbn == 2">
+					<!-- 제목+작성자 -->
+					AND (B_TITLE LIKE '%' || #{searchTxt} || '%' OR BM_NM LIKE '%' || #{searchTxt} || '%')
+
+				</when>
+			</choose>
+		</if>
+		ORDER BY B_NO DESC)
+	</select>
+	
+	<select id="getData" 
+			parameterType="hashmap"
+			resultType="hashmap">
+			
+		  SELECT B.B_NO, B.B_TITLE, B.B_CON, TO_CHAR(B.B_DT, 'YYYY-MM-DD') AS DT, 
+       		   BM.BM_NM,b.bm_no,B.B_HIT
+		FROM B B INNER JOIN BM BM ON B.BM_NO = bm.bm_no  
+		WHERE B.B_NO = #{no}
+	</select>
+	
+	<update id="updateHit" parameterType="hashmap">
+		UPDATE B SET B_HIT = B_HIT + 1
+		WHERE B_NO =  #{no}
+	</update>
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
+		VALUES(B_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
+	</insert>
+	<update id="updateData" parameterType="hashmap">
+		UPDATE B SET B_TITLE =  #{title} , BM_NO = #{bm_no}, B_CON = #{con}
+		WHERE B_NO = #{no}
+	</update>
+	<update id="deleteData" parameterType="hashmap">
+		UPDATE B SET DEL_YN = 0
+		WHERE B_NO = #{no} 
+	</update>
+</mapper>

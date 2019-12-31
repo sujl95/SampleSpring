@@ -43,8 +43,13 @@ $(document).ready(function() {
 	});
 	$("tbody").on("click","tr",function() {
 		$("#no").val($(this).attr("name"));
-		$("#actionForm").attr("action","aDetails");
-		$("#actionForm").submit();
+		if($(this).attr("name") != "") {
+			$("#no").val($(this).attr("name"));
+			reloadDetailList();
+		}
+		
+// 		$("#actionForm").attr("action","aDetails");
+// 		$("#actionForm").submit();
 	});
 	
 	$("#modifyBtn").on("click",function() {
@@ -55,8 +60,8 @@ $(document).ready(function() {
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		$("#no").val($(this).attr("name"));
 		console.log($("#no").val());
-		$("#actionForm").attr("action","aDetails");
-		$("#actionForm").submit();
+// 		$("#actionForm").attr("action","aDetails");
+// 		$("#actionForm").submit();
 	});
 	$(".whole_body").slimScroll({
 		width: "968px",
@@ -88,6 +93,28 @@ function reloadList() {
 		
 	});
 }
+
+function reloadDetailList() {
+	var params = $("#actionForm").serialize();
+	$.ajax({ 
+		type : "post",
+		url : "blogDetailAjax",
+		dataType :"json",
+		data : params,
+		success:function(result) {
+			redrawList(result.list);
+			redrawList1(result.data);
+			redrawPaging(result.pb);
+		},
+		error:function(request,status,error) {
+			console.log("status :" + request.status); //상태코드
+			console.log("text :" + request.responceText); //request영역 반환텍스트
+			console.log("error :" + request.error); //에러메세지
+		}
+		
+	});
+}
+
 
 function redrawList(list) {
 	var html ="";
@@ -150,9 +177,21 @@ function redrawList1(data) {
 // 			html += "<td>" + list[i].BM_NM +"</td>";
 			html += "" + data.B_DT +"<br/>";
 			html += "" + data.B_HIT +"<br/>";
+			
+			html += "<div class=\"Details_header\" name=\"" + data.B_NO + "\">";
+			html += "	<div class=\"Details_title\">";
+			html += "		<h2>"+ data.B_TITLE +"</h2>";
+			html += "	</div>";
+			html += "	<div class=\"Details_author\">";
+			html += "		 카테고리 | Web / Html </br>" + "작성자 | "+ data.BM_NM + "" + "&nbsp;&nbsp;&nbsp;&nbsp;	작성일 | " + data.B_DT + "";
+			html += "	</div>";
+			html += "</div>";
+			html += "<div class=\"Detail_contents\">";
+			html += ""+  data.B_CON + "";
+			html += "</div>";
 	}
 	
-	$(".a").html(html);
+	$(".Blog_Details").html(html);
 	
 }
 function redrawPaging(pb) {
@@ -200,7 +239,7 @@ function redrawPaging(pb) {
 	<div class="category">
 		<ul class="">
 			<li>
-				<a>개발 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(20)</span></a>
 			</li>
 				<ul>
 					<li>
@@ -219,20 +258,6 @@ function redrawPaging(pb) {
 						<a>IOS <span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
-			<li>
-				<a>일상 <span class="c_cnt">(1)</span></a>
-			</li>
-				<ul>
-					<li>
-						<a>일상 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>독서 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>기타 <span class="c_cnt">(1)</span></a>
-					</li>						
-				</ul>
 		</ul>
 	</div>
 	<div class="">
@@ -242,6 +267,24 @@ function redrawPaging(pb) {
 	<div class="wrap">
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
+			<div class="gnb_search_area">
+				 <form action="#" id="actionForm">
+					<input type="hidden" name="page" id="page" value="1"/>
+					<input type="hidden" name="no" id="no" value="${param.no}"/>
+					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
+					<select name="searchGbn">
+						<option value="0">제목</option>
+						<option value="1">작성자</option>
+						<option value="2">제목 + 작성자</option>
+					</select>
+					<input type="text" name="searchTxt"/>
+					<input type="button" value="검색" id="searchBtn"/>
+					<c:if test="${!empty sBmNo}">
+						<input type="button" value="등록" id="writeBtn"/>
+					</c:if>
+				</form>
+			</div>
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
 					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
@@ -260,34 +303,18 @@ function redrawPaging(pb) {
 	</div>
 	<div class="gnb_area_bottom">
 		<div class="btn_area_left">
-			 <form action="#" id="actionForm">
-				<input type="hidden" name="page" id="page" value="1"/>
-				<input type="hidden" name="no" id="no" value=""/>
-				<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
-				<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
-				<select name="searchGbn">
-					<option value="0">제목</option>
-					<option value="1">작성자</option>
-					<option value="2">제목 + 작성자</option>
-				</select>
-				<input type="text" name="searchTxt"/>
-				<input type="button" value="검색" id="searchBtn"/>
-				<c:if test="${!empty sBmNo}">
-					<input type="button" value="등록" id="writeBtn"/>
-				</c:if>
-			</form>
 		</div>
 	</div>
-	<div class="contents_area">
-		<div class="contents_title_area">
-			<div class="contents_title">
-				안녕하세요
-			</div>
-			<div class="contents_author_area">
-				by <span>The Wing</span> &nbsp;작성일<span> 2019-12-18</span>
-			</div>
-		</div>
-	</div>
+<!-- 	<div class="contents_area"> -->
+<!-- 		<div class="contents_title_area"> -->
+<!-- 			<div class="contents_title"> -->
+<!-- 				안녕하세요 -->
+<!-- 			</div> -->
+<!-- 			<div class="contents_author_area"> -->
+<!-- 				by <span>The Wing</span> &nbsp;작성일<span> 2019-12-18</span> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
 	<div class="Blog_Details_area">
 		<form action="#" method="post" id="actionForm">
 			<input type="hidden" name="page" value="${param.page}"/>
@@ -296,7 +323,22 @@ function redrawPaging(pb) {
 			<input type="hidden" name="no" value="${data.B_NO}"/>
 			<input type="hidden" name="bm_no" value="${data.BM_NO}"/>
 		</form>
-		<div class="a">
+		<div class="Blog_Details">
+			<div class="Details_header">
+				<div class="Details_title">
+					<h2>[Html] 테이블(Table) 사용법 총정리(만들기,테두리,병합,정렬,배경색 등등)</h2>
+				</div>
+				<div class="Details_author">
+				작성자 : 코딩팩토리  카테고리 : Web / Html 작성일 : 2018. 6. 22. 00:13
+				</div>
+			</div>
+			<div class="Detail_contents">
+				HTML을 하다보면 굉장히 많이 사용하는 태그가 바로 일것입니다. 바로 표를 만들어주는 HTML태그인데요.
+				표 뿐만 아니라 갤러리를 만들 수도 있고 지금은 잘 사용하지 않습니다만 웹사이트 전체의 레이아웃 공간을 배치할때도 사용할 수 있는 등 매우 다양하게 응용이 가능하여 굉장히 많이 사용되는 태그중 하나입니다. 이번 포스팅에서는 HTML의 테이블을 만드는 모든 기법에 대해 다뤄보려 합니다.
+			</div>
+		</div>
+		
+		<div class="Blog_Details1">
 		번호 : ${data.B_NO}     <br/>
 		제목 : ${data.B_TITLE}   <br/>
 		가입일 : ${data.DT}      <br/>

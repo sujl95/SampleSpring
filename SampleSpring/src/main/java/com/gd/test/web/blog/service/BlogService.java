@@ -73,6 +73,21 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getData(params);
 	}
 
+	@Override
+	public void deleteBMData(HashMap<String, String> params) throws Throwable {
+		iBlogDao.deleteBMData(params);
+	}
+
+	@Override
+	public void updateBMData(HashMap<String, String> params) throws Throwable {
+		iBlogDao.updateBMData(params);
+	}
+
+	@Override
+	public void insertData(HashMap<String, String> params) throws Throwable {
+		iBlogDao.insertData(params);
+	}
+
 		
 
 }

@@ -53,7 +53,7 @@ $(document).ready(function() {
 </head>
 <body>
 	<div class="wrap_login_bg">
-		<div class=login_contents_area>
+		<div class="login_contents_area">
 			<div class="login_title_area">
 				Login
 			</div>

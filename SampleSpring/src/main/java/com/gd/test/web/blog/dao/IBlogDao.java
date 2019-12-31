@@ -29,5 +29,11 @@ public interface IBlogDao {
 
 	HashMap<String, String> getData(HashMap<String, String> params) throws Throwable;
 
+	void deleteBMData(HashMap<String, String> params) throws Throwable;
+
+	void updateBMData(HashMap<String, String> params) throws Throwable;
+
+	void insertData(HashMap<String, String> params) throws Throwable;
+
 
 }

@@ -72,5 +72,20 @@ public class BlogDao implements IBlogDao{
 	public HashMap<String, String> getData(HashMap<String, String> params) throws Throwable {
 		return sqlSession.selectOne("blog.getData",params);
 	}
+
+	@Override
+	public void deleteBMData(HashMap<String, String> params) throws Throwable {
+		sqlSession.update("blog.deleteBMData",params);	
+	}
+
+	@Override
+	public void updateBMData(HashMap<String, String> params) throws Throwable {
+		sqlSession.update("blog.updateBMData",params);	
+	}
+
+	@Override
+	public void insertData(HashMap<String, String> params) throws Throwable {
+		sqlSession.insert("blog.insertData",params);
+	}
 	
 }

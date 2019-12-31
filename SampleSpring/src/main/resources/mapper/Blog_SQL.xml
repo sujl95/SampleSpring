@@ -40,7 +40,7 @@
 	</select>
 	<select id="getBlogCnt" parameterType="hashmap" resultType="Integer">
 		SELECT COUNT(*) AS CNT
-		FROM B B  INNER JOIN BLOG_BM BM
+		FROM BLOG_B B  INNER JOIN BLOG_BM BM
 		                ON B.BM_NO = BM.BM_NO
 		                AND BM.DEL_YN = 1
 		WHERE B.DEL_YN = 1
@@ -105,6 +105,7 @@
 		                      GROUP BY BM_NO,B_NO) 
 		                WHERE RNK =1 ) BM ON B.B_NO = BM.B_NO
 	</select>
+	<!-- 블로그 리스트 가져오기 -->
 	<select id="getBlogList" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT,B.BM_NO,B.B_CON
 		FROM(   SELECT B.B_NO,B.B_TITLE,BM.BM_NM,BM.BM_NO,B.B_CON,(TO_CHAR( B.B_DT,'YYYY.MM.DD')) AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
@@ -131,6 +132,7 @@
 		    )B
 		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
 		       AND B.BM_NO =  #{bmno}
+		ORDER BY B.B_NO
 	</select>
 	<select id="getAllBCnt" parameterType="hashmap" resultType="Integer">
 		SELECT COUNT(*) AS CNT
@@ -161,11 +163,25 @@
 	</update>
 	<!-- 상세보기 조회 -->
 	<select id="getData" parameterType="hashmap" resultType="hashmap">
-		  SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
-				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
-				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
-       		   BM.BM_NM,b.bm_no,B.B_HIT
-		FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = bm.bm_no  
-		WHERE B.B_NO = 1
+		 SELECT *
+		 FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
+						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
+						TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
+		       		   BM.BM_NM,b.bm_no,B.B_HIT 
+				FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = bm.bm_no  
+				WHERE B.B_NO = #{no}
+		        ORDER BY B.B_NO
+		      )
 	</select>
+	
+	<!-- 회원수정 -->
+	<update id="updateBMData" parameterType="hashmap">
+		UPDATE BLOG_BM SET BM_PW =  #{pwTxt} , BM_NM = #{nmTxt}
+		WHERE BM_NO = #{bmno}
+	</update>
+	<!-- 회원탈퇴 -->
+	<update id="deleteBMData" parameterType="hashmap">
+		UPDATE BLOG_BM SET DEL_YN = 0
+		WHERE BM_NO = #{bmno}
+	</update>
 </mapper>

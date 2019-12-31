@@ -47,12 +47,18 @@ $(document).ready(function() {
 	});
 	
 	$("#modifyBtn").on("click",function() {
-		$("#actionForm").attr("action","aModify");
+		$("#actionForm").attr("action","blog_Modify");
 		$("#actionForm").submit();
 	});
 	
 	$(".table_area").on("click", ".Blog_contents_area", function() {
-		$("#bmno").val($(this).attr("name"));
+		var arr = [];
+		arr = $(this).attr("name").split(",");
+		console.log(arr);
+		$("#bmno").val(arr[0]);
+		$("#no").val(arr[1]);
+		console.log($("#bmno").val());
+		console.log($("#no").val());
 		$("#actionForm").attr("action","blog_List");
 		$("#actionForm").submit();
 	});
@@ -93,7 +99,7 @@ function redrawList(list) {
 		html += "<span\">조회된 데이터가 없습니다.</span>";
 	} else {
 		for(var i in list) {
-			html += "<div name=\"" + list[i].BM_NO + "\" class=\"Blog_contents_area\">"
+			html += "<div name=\"" + list[i].BM_NO +","+list[i].B_NO+"\" class=\"Blog_contents_area\">"
 			html += "	<div class=\"Blog_contents_author\">"
 			html += "		<div class=\"author\">" + list[i].BM_NM + "</div>"
 			html += "		<div class=\"time\">" + list[i].B_DT + "</div>"
@@ -158,7 +164,7 @@ function redrawPaging(pb) {
 	<div class="category">
 		<ul class="">
 			<li>
-				<a>개발 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(20)</span></a>
 			</li>
 				<ul>
 					<li>
@@ -177,64 +183,53 @@ function redrawPaging(pb) {
 						<a>IOS <span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
-			<li>
-				<a>일상 <span class="c_cnt">(1)</span></a>
-			</li>
-				<ul>
-					<li>
-						<a>일상 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>독서 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>기타 <span class="c_cnt">(1)</span></a>
-					</li>						
-				</ul>
 		</ul>
 	</div>
 	<div class="">
 	</div>
 </div>
-<div class="gnb_area">
-	<div class="gnb_btn_area">
-	<c:choose>
-		<c:when test="${!empty sBmNo}">
-			${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
-			<input type="button" value="회원 정보 수정" id="modifyBtn">
-		</c:when>
-		<c:otherwise>
-			<input type="button" value="로그인" id="loginBtn"/>&nbsp;
-			<input type="button" id="joinBtn" value="회원가입">
-		</c:otherwise>
-	</c:choose>
-		<span>내 블로그</span>&nbsp; | &nbsp;
-		<span>이웃블로그</span>&nbsp; | &nbsp;
-		<span>블로그 홈</span>&nbsp; | &nbsp;
-	</div>
-</div>
+
 <div class="whole_body">
 	<div class="wrap">
-		
+		<div class="gnb_area">
+			<div class="gnb_btn_area">
+			<div class="gnb_search_area">
+				 <form action="#" id="actionForm">
+					<input type="hidden" name="page" id="page" value="1"/>
+					<input type="hidden" name="no" id="no" value="${param.no}"/>
+					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
+					<select name="searchGbn">
+						<option value="0">제목</option>
+						<option value="1">작성자</option>
+						<option value="2">제목 + 작성자</option>
+					</select>
+					<input type="text" name="searchTxt"/>
+					<input type="button" value="검색" id="searchBtn"/>
+					<c:if test="${!empty sBmNo}">
+						<input type="button" value="등록" id="writeBtn"/>
+					</c:if>
+				</form>
+			</div>
+			<c:choose>
+				<c:when test="${!empty sBmNo}">
+					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
+					<input type="button" value="회원 정보 수정" id="modifyBtn">
+				</c:when>
+				<c:otherwise>
+					<input type="button" value="로그인" id="loginBtn"/>&nbsp;
+					<input type="button" id="joinBtn" value="회원가입">
+				</c:otherwise>
+			</c:choose>
+				<span>내 블로그</span>&nbsp; | &nbsp;
+				<span>이웃블로그</span>&nbsp; | &nbsp;
+				<span>블로그 홈</span>&nbsp; | &nbsp;
+			</div>
+		</div>
 	</div>
 	<div class="gnb_area_bottom">
 		<div class="btn_area_left">
-			 <form action="#" id="actionForm">
-				<input type="hidden" name="page" id="page" value="1"/>
-				<input type="hidden" name="no" id="no" value=""/>
-				<input type="hidden" name="bmno" id="bmno" value=""/>
-				<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
-				<select name="searchGbn">
-					<option value="0">제목</option>
-					<option value="1">작성자</option>
-					<option value="2">제목 + 작성자</option>
-				</select>
-				<input type="text" name="searchTxt"/>
-				<input type="button" value="검색" id="searchBtn"/>
-				<c:if test="${!empty sBmNo}">
-					<input type="button" value="등록" id="writeBtn"/>
-				</c:if>
-			</form>
+			 
 		</div>
 	</div>
 	<div class="contents_area">

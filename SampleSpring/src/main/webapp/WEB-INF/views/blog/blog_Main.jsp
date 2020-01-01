@@ -254,7 +254,6 @@ function redrawPaging(pb) {
 			</div>
 		</div>
 	</div>
-	
 </div>
 </body>
 </html>

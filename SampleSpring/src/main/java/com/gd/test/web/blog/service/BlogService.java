@@ -88,6 +88,11 @@ public class BlogService implements IBlogService {
 		iBlogDao.insertData(params);
 	}
 
+	@Override
+	public HashMap<String, String> getBMM(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getBMM(params);
+	}
+
 		
 
 }

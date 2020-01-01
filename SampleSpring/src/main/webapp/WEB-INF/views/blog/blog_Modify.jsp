@@ -12,6 +12,9 @@
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	$("#cancelBtn").on("click", function() {
+		location.href = "blog_Main";
+	});
 	$("#withdrawalBtn").on("click", function() {
 		if(confirm("회원탈퇴 하실겁니까?")) {
 			var params = $("#actionForm").serialize();
@@ -82,7 +85,7 @@ $(document).ready(function() {
 				<input class="input_normal" type="text" name="nmTxt" id="nmTxt" value="${data.BM_NM}" placeholder="이름입력"/><br/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="writeBtn" value="수정"/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="withdrawalBtn" value="회원탈퇴"/>
-				<input class="input_normal bgwhite pocursor txthover" type="button" id="withdrawalBtn" value="취소"/>
+				<input class="input_normal bgwhite pocursor txthover" type="button" id="cancelBtn" value="취소"/>
 			</form>
 		</div>
 	</div>

@@ -44,7 +44,9 @@ $(document).ready(function() {
 			});
 		}
 	});
-	
+	$("#cancelBtn").on("click", function() {
+		location.href = "blog_Main";
+	});
 	$("#joinBtn").on("click", function() {
 		location.href = "blog_Join";
 	});
@@ -63,6 +65,7 @@ $(document).ready(function() {
 					<input class="input_normal" type="password" name="bmPw" id="bmPw" placeholder="비밀번호"/>
 					<input class="input_normal bgwhite pocursor txthover" type="button" id="loginBtn" value="로그인"/>
 					<input class="input_normal bgwhite pocursor txthover" type="button" id="joinBtn" value="회원가입"/>
+					<input class="input_normal bgwhite pocursor txthover" type="button" id="cancelBtn" value="취소"/>
 				</div>
 			</form>
 		</div>

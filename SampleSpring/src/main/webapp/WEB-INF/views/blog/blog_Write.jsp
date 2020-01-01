@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,21 +9,54 @@
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
+<!-- 슬림 스크롤 js 파일 -->
+<script type="text/javascript" src="resources/script/jquery/jquery.slimscroll.js"></script>
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$(".logo_wrap").on("click",function() {
-			location.href = "blog_Main";
-		});
-		CKEDITOR.replace("con", {
-			resize_enabled : false,
-			language : "ko", 
-			enterMode : "2"
-		});
-		if('${res}' == 1){
-			alert("로그인을 해주세요");
-			location.href = "bLogin";
-		} 
+$(document).ready(function() {
+	$("#logoutBtn").on("click", function() {
+		location.href = "blog_Logout";
+	});
+	$("#loginBtn").on("click", function() {
+		location.href = "blog_Login";
+	});
+	
+	$(".logo_wrap").on("click",function() {
+		location.href = "blog_Main";
+	});
+	
+	$("#joinBtn").on("click", function() {
+		location.href = "blog_Join";
+	});
+	
+	$("#searchBtn").on("click", function() {
+		$("#page").val("1");
+		reloadList();
+	});
+	$("#writeBtn").on("click", function() {
+		location.href = "blog_Write";
+	});
+	$("#modifyBtn").on("click",function() {
+		$("#actionForm").attr("action","blog_Modify");
+		$("#actionForm").submit();
+	});
+	$(".whole_body").slimScroll({
+		width: "968px",
+		height: "100%"
+	});
+	$(".left_wrap").slimScroll({
+		width: "300px",
+		height: "100%"
+	});
+	CKEDITOR.replace("con", {
+		resize_enabled : false,
+		language : "ko", 
+		enterMode : "2"
+	});
+	if('${res}' == 1){
+		alert("로그인을 해주세요");
+		location.href = "blog_Login";
+	} 
 			
 	$("#saveBtn").on("click", function() {
 		$("#con").val(CKEDITOR.instances['con'].getData()); //ckeditor에서 화면중 con이라는 이름을 가진 데이터를 가져온다
@@ -42,13 +75,13 @@
 			
 			$.ajax({
 				type : "post", //데이터 전송방식
-				url : "aWriteAjax", //주소
+				url : "bWriteAjax", //주소
 				dataType :"json", //데이터 전송규격
 				data : params, //보낼 데이터
 				//{키 : 값, 키 : 값,...} -> json
 				success : function(result) {
 					if(result.res=="SUCCESS") {
-						location.href = "aList";
+						location.href = "Blog_List";
 					} else {
 						alert("등록에 실패하였습니다");
 					}

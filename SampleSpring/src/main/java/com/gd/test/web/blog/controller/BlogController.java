@@ -53,7 +53,10 @@ public class BlogController {
 	}
 //	회원정보수정
 	@RequestMapping(value = "blog_Modify")
-	public ModelAndView bModify(ModelAndView mav) {
+	public ModelAndView bModify(@RequestParam HashMap<String,String>params, ModelAndView mav,HttpSession session) throws Throwable{
+		params.put("bm_NO", String.valueOf(session.getAttribute("sBmNo")));
+		HashMap<String,String> data = iBlogService.getBMM(params);
+		mav.addObject("data", data);
 		mav.setViewName("blog/blog_Modify");
 		return mav;
 	}
@@ -155,12 +158,14 @@ public class BlogController {
 		return mapper.writeValueAsString(modelMap); 
 		
 	}
+//	로그아웃
 	@RequestMapping(value = "/blog_Logout")
 	public ModelAndView bLogout(HttpSession session, ModelAndView mav) {
 		session.invalidate();
 		mav.setViewName("redirect:blog_Login");
 		return mav;
 	}
+//	리스트
 	@RequestMapping(value = "/bListAjax",
 			method = RequestMethod.POST,
 			produces = "test/json;charset=UTF-8")
@@ -185,7 +190,7 @@ public class BlogController {
 		
 		return mapper.writeValueAsString(modelMap);
 	}
-	
+//	블로그리스트
 	@RequestMapping(value = "/blogListAjax",
 			method = RequestMethod.POST,
 			produces = "test/json;charset=UTF-8")
@@ -193,7 +198,6 @@ public class BlogController {
 	public String blogListAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
-		System.out.println("param =" +params);
 		
 		int cnt = iBlogService.getBlogCnt(params);
 		

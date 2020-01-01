@@ -155,7 +155,7 @@ html , body {
 }
 .login_contents_area {
 	width: 500px;
-	height: 400px;
+	height: 500px;
 	position: absolute;
 	top: calc(50% - 175px);
 	left: calc(50% - 250px);

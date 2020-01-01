@@ -35,5 +35,7 @@ public interface IBlogService {
 
 	void insertData(HashMap<String, String> params) throws Throwable;
 
+	HashMap<String, String> getBMM(HashMap<String, String> params) throws Throwable;
+
 
 }

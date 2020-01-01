@@ -88,6 +88,7 @@
 		    )B
 		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
 	</select>
+	<!-- 블로그 메인 리스트 가져오기  -->
 	<select id="getBlog" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO
 		FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
@@ -99,7 +100,7 @@
 		    
 		    WHERE B.DEL_YN = 1) B 
 		    INNER JOIN (SELECT *
-		                FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO ASC) AS RNK ,BM_NO,B_NO
+		                FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) AS RNK ,BM_NO,B_NO
 		                      FROM BLOG_B B
 		                      WHERE DEL_YN = 1
 		                      GROUP BY BM_NO,B_NO) 
@@ -184,4 +185,17 @@
 		UPDATE BLOG_BM SET DEL_YN = 0
 		WHERE BM_NO = #{bmno}
 	</update>
+	
+	<!-- 회원수정 아이디값 가져오기 -->
+	<select id="getBMM" parameterType="hashmap" resultType="hashmap">
+		SELECT BM_NO,BM_ID, BM_NM 
+		FROM BLOG_BM
+		WHERE DEL_YN = 1
+		AND BM_NO = #{bm_NO}	
+	</select>
+	<!-- 게시글 등록 -->
+	<insert id="insertData" parameterType="hashmap">
+		INSERT INTO BLOG_B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
+		VALUES(BLOG_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
+	</insert>
 </mapper>

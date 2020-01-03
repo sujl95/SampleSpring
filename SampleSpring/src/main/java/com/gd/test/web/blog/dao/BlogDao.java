@@ -92,5 +92,10 @@ public class BlogDao implements IBlogDao{
 	public HashMap<String, String> getBMM(HashMap<String, String> params) throws Throwable {
 		return sqlSession.selectOne("blog.getBMM",params);
 	}
+
+	@Override
+	public HashMap<String, String> getBMCT(HashMap<String, String> params) throws Throwable {
+		return sqlSession.selectOne("blog.getBMCT",params);
+	}
 	
 }

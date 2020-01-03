@@ -16,37 +16,15 @@ $(document).ready(function() {
 		location.href = "blog_Main";
 	});
 	$("#withdrawalBtn").on("click", function() {
-		if(confirm("회원탈퇴 하실겁니까?")) {
-			var params = $("#actionForm").serialize();
-			$.ajax({
-				type : "post",
-				url : "bWithdrawalAjax",
-				dataType : "json" ,
-				data : params,
-				success:function(result){
-					if(result.res=="SUCCESS") {
-						alert("정상적으로 탈퇴 되었습니다");
-						location.href = "blog_Login";
-					} else {
-						alert("탈퇴 처리가 되지 않았습니다");
-					}
-				}
-			})
-		}
 	});
 	$("#writeBtn").on("click", function() {
-		if($.trim($("#idTxt").val()) == "") {
-			alert("아이디를 입력하세요.");
-			$("#idTxt").focus();
-		} else if($.trim($("#pwTxt").val()) == "") {
-			alert("비밀번호를 입력하세요.");
-			$("#pwTxt").focus();
-		} else if ($.trim($("#nmTxt").val()) == "") {
-			alert("이름을 입력하세요.");
-			$("#nmTxt").focus();
-		} else if ($("#pwTxt").val() != $("#pwTxt1").val()) {
-			alert("비밀번호가 일치하지 않습니다");
-			$("#pwTxt").focus();
+		if(($.trim($("#category1Txt").val()) == "") && 
+		   ($.trim($("#category2Txt").val()) == "") &&
+		   ($.trim($("#category3Txt").val()) == "") &&
+		   ($.trim($("#category4Txt").val()) == "") &&
+		   ($.trim($("#category5Txt").val()) == "")
+		) {
+			alert("최소 1개이상의 카테고리를 입력하세요.");
 		} 
 		else {
 			var params = $("#actionForm").serialize();
@@ -77,21 +55,22 @@ $(document).ready(function() {
 </head>
 <body>
 <div class="wrap_login_bg">
-	<div class="Modify_contents_area">
+	<div class="Category_contents_area">
 		<div class="login_title_area">
-			회원정보수정
+			카테고리설정
 		</div>
 <!-- 		<div class="login_txt_area"> -->
 <!-- 		</div> -->
-		<div class="login_btn_area">
+		<div class="Category_btn_area">
 			<form action="#" method="post" id="actionForm">
 				<input type="hidden" name="bmno" id="bmno" value="${data.BM_NO}"/><br/>
-				<input class="input_normal" type="text" name="idTxt" id="idTxt" readonly="readonly" placeholder="ID입력" value="${data.BM_ID}"/><br/>
-				<input class="input_normal" type="password" name="pwTxt" id="pwTxt" value="" placeholder="PW입력"/><br/>
-				<input class="input_normal" type="password" name="pwTxt" id="pwTxt1" value="" placeholder="PW확인"/><br/>
 				<input class="input_normal" type="text" name="nmTxt" id="nmTxt" value="${data.BM_NM}" placeholder="이름입력"/><br/>
-				<input class="input_normal bgwhite pocursor txthover" type="button" id="writeBtn" value="수정"/>
-				<input class="input_normal bgwhite pocursor txthover" type="button" id="withdrawalBtn" value="회원탈퇴"/>
+				<input class="input_normal" type="text" name="categoryTxt" id="category1Txt" placeholder="카테고리1입력" value="${data.CT1}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt" id="category2Txt" placeholder="카테고리2입력" value="${data.CT2}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt" id="category3Txt" placeholder="카테고리3입력" value="${data.CT3}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt" id="category4Txt" placeholder="카테고리4입력" value="${data.CT4}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt" id="category5Txt" placeholder="카테고리5입력" value="${data.CT5}"/><br/>
+				<input class="input_normal bgwhite pocursor txthover" type="button" id="writeBtn" value="저장"/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="cancelBtn" value="취소"/>
 			</form>
 		</div>

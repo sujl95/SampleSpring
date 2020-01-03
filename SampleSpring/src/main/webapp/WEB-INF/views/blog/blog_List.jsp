@@ -117,7 +117,7 @@ $(document).ready(function() {
 			$(this).css("background-color","#F0F0F0");
 			$(this).css("color","black");
 // 			$(".Blog_Comments_reply_btn").css("background-color","#F0F0F0");
-// 			$(".Blog_Comments_reply_btn").css("color","black");
+// 			$(".Blog_Commen	ts_reply_btn").css("color","black");
 		}
 	});
 	

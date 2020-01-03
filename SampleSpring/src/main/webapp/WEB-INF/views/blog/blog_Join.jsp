@@ -63,7 +63,10 @@ $(document).ready(function() {
 		} else if($.trim($("#bmPw").val()) == "") {
 			alert("비밀번호를 입력하세요.");
 			$("#bmPw").focus();
-		} else if($.trim($("#bmNm").val()) == "") {
+		}  else if ($("#bmNm").val() != $("#pwTxt1").val()) {
+			alert("비밀번호가 일치하지 않습니다");
+			$("#bmNm").focus();
+		}  else if($.trim($("#bmNm").val()) == "") {
 			alert("이름을 입력하세요. ");
 		} else if($("#checkId").val() == 0) {
 			alert("아이디가 유효하지 않습니다.");
@@ -112,6 +115,7 @@ $(document).ready(function() {
 			<div class="login_btn_area" style="font-size : 20px;">
 				<input class="input_normal" type="text" name="bmId" id="bmId" placeholder="아이디"/>
 				<input class="input_normal" type="password" name="bmPw" id="bmPw" placeholder="비밀번호"/>
+				<input class="input_normal" type="password" name="pwTxt" id="pwTxt1" value="" placeholder="PW확인"/>
 				<input class="input_normal" type="text" name="bmNm" id="bmNm" placeholder="이름" />
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="joinBtn" value="가입"/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="cancelBtn" value="취소"/>

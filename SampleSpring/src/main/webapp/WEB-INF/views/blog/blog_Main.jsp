@@ -51,6 +51,11 @@ $(document).ready(function() {
 		$("#actionForm").submit();
 	});
 	
+	$("#categoryBtn").on("click",function() {
+		$("#actionForm").attr("action","blog_Category");
+		$("#actionForm").submit();
+	});
+	
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		var arr = [];
 		arr = $(this).attr("name").split(",");
@@ -61,6 +66,27 @@ $(document).ready(function() {
 		console.log($("#no").val());
 		$("#actionForm").attr("action","blog_List");
 		$("#actionForm").submit();
+	});
+	$(".setting").on("click",function(e) {
+		if($(".setting_area").css("display") == "none"){ 
+		 $(".setting_area")
+	     .addClass("on")
+		 .css({
+	       left: "672px",
+	       top: "37px"
+	     });
+		}
+		 else {
+			 $(".setting_area")
+		     .removeClass("on");
+		 }
+// 		 $(".setting_area")
+// 	     .addClass("contextOpened")
+// 	     .css({
+// 	       display: "block",
+// 	       left: jsEvent.pageX,
+// 	       top: jsEvent.pageY
+// 	     });
 	});
 	
 	$(".whole_body").slimScroll({
@@ -109,7 +135,7 @@ function redrawList(list) {
 			html += "	<div class=\"Blog_contents_contents\">"
 			html += "	"+ list[i].B_CON + "</div>"
 			html += "	<div class=\"Blog_contents_comment\">"
-			html += "	공감<span>55</span> 댓글 <span>7</span>"
+			html += "	댓글 <span>7</span>"
 			html += "	</div>"
 			html += "</div><hr>"
 		}
@@ -214,7 +240,14 @@ function redrawPaging(pb) {
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
 					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
-					<input type="button" value="회원 정보 수정" id="modifyBtn">
+					<div class="setting">
+						설정
+					</div>
+					<div class="setting_area">
+						<div class="setting_hover" style="border-bottom : 1px solid #cacaca;" id="modifyBtn">회원 정보 수정</div><br>
+						<div class="setting_hover" id="categoryBtn">카테고리 설정</div>
+					</div>
+<!-- 					<input type="button" value="회원 정보 수정" id="modifyBtn"> -->
 				</c:when>
 				<c:otherwise>
 					<input type="button" value="로그인" id="loginBtn"/>&nbsp;

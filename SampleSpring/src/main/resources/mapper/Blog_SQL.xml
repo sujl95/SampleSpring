@@ -17,12 +17,16 @@
 		AND BM_ID = #{bmId}
 		AND BM_PW = #{bmPw}	
 	</select>
+	<!-- 메인리스트 가져오기  -->
 	<select id="getBCnt" parameterType="hashmap" resultType="Integer">
-		SELECT COUNT(*) AS CNT
-		FROM BLOG_B B  INNER JOIN BLOG_BM BM
-		                ON B.BM_NO = BM.BM_NO
-		                AND BM.DEL_YN = 1
-		WHERE B.DEL_YN = 1
+		SELECT COUNT(*) AS CNT FROM( 
+		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( 
+		B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 
+		'||TO_CHAR( B.B_DT,'MM')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY B.B_NO DESC) AS 
+		RNUM FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = BM.BM_NO AND BM.DEL_YN = 1 WHERE B.DEL_YN 
+		= 1) B INNER JOIN (SELECT * FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) 
+		AS RNK ,BM_NO,B_NO FROM BLOG_B B WHERE DEL_YN = 1 GROUP BY BM_NO,B_NO) WHERE RNK =1 ) BM ON 
+		B.B_NO = BM.B_NO )
 		<if test="searchTxt != null and searchTxt != ''">
 			<choose>
 				<when test="searchGbn eq 0">
@@ -198,4 +202,11 @@
 		INSERT INTO BLOG_B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
 		VALUES(BLOG_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
 	</insert>
+	
+	<!-- 회원 카데고리 가져오기 -->
+	<select id="getBMCT" parameterType="hashmap" resultType="hashmap">
+		SELECT CT.* , BM.BM_NM
+		FROM BLOG_CT CT INNER JOIN BLOG_BM BM ON BM.BM_NO = CT.BM_NO 
+		WHERE BM.BM_NO = #{bm_NO}
+	</select>
 </mapper>

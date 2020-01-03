@@ -37,5 +37,7 @@ public interface IBlogDao {
 
 	HashMap<String, String> getBMM(HashMap<String, String> params) throws Throwable;
 
+	HashMap<String, String> getBMCT(HashMap<String, String> params) throws Throwable;
+
 
 }

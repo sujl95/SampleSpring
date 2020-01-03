@@ -61,6 +61,16 @@ public class BlogController {
 		return mav;
 	}
 	
+//	카테고리 등록 및 수정
+	@RequestMapping(value = "blog_Category")
+	public ModelAndView bCategory(@RequestParam HashMap<String,String>params, ModelAndView mav,HttpSession session) throws Throwable{
+		params.put("bm_NO", String.valueOf(session.getAttribute("sBmNo")));
+		HashMap<String,String> data = iBlogService.getBMCT(params);
+		mav.addObject("data", data);
+		mav.setViewName("blog/blog_Category");
+		return mav;
+	}
+	
 	@RequestMapping(value = "blog_Search")
 	public ModelAndView bSearch(ModelAndView mav) {
 		mav.setViewName("blog/blog_Search");
@@ -173,7 +183,6 @@ public class BlogController {
 	public String bListAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
-		System.out.println("param =" +params);
 		
 		int cnt = iBlogService.getBCnt(params);
 		

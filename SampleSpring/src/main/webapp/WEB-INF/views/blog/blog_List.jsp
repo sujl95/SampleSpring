@@ -25,7 +25,10 @@ $(document).ready(function() {
 	$(".logo_wrap").on("click",function() {
 		location.href = "blog_Main";
 	});
-	
+
+	$("#joinBtn").on("click", function() {
+		location.href = "blog_Join";
+	});
 	$("#searchBtn").on("click", function() {
 		$("#page").val("1");
 		reloadList();
@@ -72,7 +75,69 @@ $(document).ready(function() {
 		width: "300px",
 		height: "100%"
 	});
+	
+	$("#Comment_textarea").on("keyup",function() {
+// 		var $Comment_textarea = $("#Comment_textarea");
+// 		var $Comment_cnt	= $("#Comment_cnt");
+// 		console.log($Comment_textarea.length());
+// 		$Comment_cnt.val($Comment_textarea.size());
+		var content = $(this).val();
+		console.log(content.length);
+// 	    $('#Comment_cnt').html("("+content.length+" / 최대 200자)");    //글자수 실시간 카운팅
+	    $('.Comment_cnt').html(content.length);    //글자수 실시간 카운팅
+
+	    if (content.length > 200){
+	        alert("최대 200자까지 입력 가능합니다.");
+	        $(this).val(content.substring(0, 200));
+	        $('#Comment_cnt').html("(200 / 최대 200자)");
+	    }
+	});
+	
+	$(".Blog_Comments_Button").on("click", function() {
+		if($(".Blog_Comments_show").css("display") == "none"){
+			console.log("체크");
+			$(".Blog_Comments_show").show();
+			$("#Blog_Comments_show").html("댓글 보기");
+		}else{
+			$(".Blog_Comments_show").hide();
+			$("#Blog_Comments_show").html("댓글 숨기기");
+		}
+	});
+	$(".Blog_Comments_reply_btn").on("click", function() {
+		if($(this).parent().children(".Blog_Comments_reply").css("display") == "none"){
+			replyshow($(this).parent().children(".Blog_Comments_reply"));
+			console.log("체크");
+			$(this).parent().children(".Blog_Comments_reply").show();
+			$(this).css("background-color","#cacaca");
+			$(this).css("color","#FFFFFF");
+// 			$(".Blog_Comments_reply_btn").css("background-color","#cacaca");
+// 			$(".Blog_Comments_reply_btn").css("color","#FFFFFF");
+		}else{
+			$(this).parent().children(".Blog_Comments_reply").hide();
+			$(this).css("background-color","#F0F0F0");
+			$(this).css("color","black");
+// 			$(".Blog_Comments_reply_btn").css("background-color","#F0F0F0");
+// 			$(".Blog_Commen	ts_reply_btn").css("color","black");
+		}
+	});
+	
+	
+	
 });
+
+function replyshow(obj){
+	var html ="";
+		html += "<div class=\"Blog_Comments_textbox_area\">";
+		html += "	<div class=\"Blog_Comments_textbox_author\">";
+		html += "		작성자 : ${sBmNm}";
+		html += "	</div>";
+		html += "	<textarea class=\"Blog_Comments_textbox\"  placeholder=\"답글을 작성하려면 로그인 해주세요\" id=\"Comment_textarea\"></textarea>";
+		html += "	<div class=\"Blog_Comments_textbox_cnt_area\"><span class=\"Comment_cnt\">0</span>/200<input type=\"button\" id=\"Comment_add\" value=\"등록\"></div>";
+		html += "</div>";
+	obj.html(html);
+
+}
+
 function reloadList() {
 	var params = $("#actionForm").serialize();
 	$.ajax({ 
@@ -326,26 +391,92 @@ function redrawPaging(pb) {
 		<div class="Blog_Details">
 			<div class="Details_header">
 				<div class="Details_title">
-					<h2>[Html] 테이블(Table) 사용법 총정리(만들기,테두리,병합,정렬,배경색 등등)</h2>
 				</div>
 				<div class="Details_author">
-				작성자 : 코딩팩토리  카테고리 : Web / Html 작성일 : 2018. 6. 22. 00:13
 				</div>
 			</div>
 			<div class="Detail_contents">
-				HTML을 하다보면 굉장히 많이 사용하는 태그가 바로 일것입니다. 바로 표를 만들어주는 HTML태그인데요.
-				표 뿐만 아니라 갤러리를 만들 수도 있고 지금은 잘 사용하지 않습니다만 웹사이트 전체의 레이아웃 공간을 배치할때도 사용할 수 있는 등 매우 다양하게 응용이 가능하여 굉장히 많이 사용되는 태그중 하나입니다. 이번 포스팅에서는 HTML의 테이블을 만드는 모든 기법에 대해 다뤄보려 합니다.
 			</div>
 		</div>
-		
-		<div class="Blog_Details1">
-		번호 : ${data.B_NO}     <br/>
-		제목 : ${data.B_TITLE}   <br/>
-		가입일 : ${data.DT}      <br/>
-		작성자 : ${data.BM_NM}  <br/>
-		조회수 : ${data.B_HIT}     <br/>
-		- 내용  - <br/>
-		${data.B_CON} <br>
+		<div class="Blog_Comments_area">
+			<div class="Blog_Comments_Button" id="Comments_show">
+				<img style="width : 30px; height : 30px;"alt="comments_button" src="resources/images/blog/comment.PNG">
+				<div class="Blog_Comments_text"><span id="Blog_Comments_show">댓글 보기</span> ( <span>0</span> )</div>
+				
+			</div>
+			<div class="Blog_Comments_show">
+				<div class="Blog_Comments_box">
+					<div class="Blog_Comments_author">
+						SJ BLOG
+					</div>
+					<div class="Blog_Comments_contents">
+						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
+					</div>
+					<div class="Blog_Comments_date">
+						2020.01.02 16:00
+					</div>
+					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+					<div class="Blog_Comments_reply" >
+					</div>
+				</div>
+				<div class="Blog_Comments_box">
+					<div class="Blog_Comments_author">
+						SJ BLOG
+					</div>
+					<div class="Blog_Comments_contents">
+						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
+					</div>
+					<div class="Blog_Comments_date">
+						2020.01.02 16:00
+					</div>
+					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+					<div class="Blog_Comments_reply" >
+					</div>
+				</div>
+				<div class="Blog_Comments_box">
+					<div class="Blog_Comments_author">
+						SJ BLOG
+					</div>
+					<div class="Blog_Comments_contents">
+						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
+					</div>
+					<div class="Blog_Comments_date">
+						2020.01.02 16:00
+					</div>
+					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+					<div class="Blog_Comments_reply" >
+					</div>
+				</div>
+				<div class="Blog_Comments_box">
+					<div class="Blog_Comments_author">
+						SJ BLOG
+					</div>
+					<div class="Blog_Comments_contents">
+						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
+					</div>
+					<div class="Blog_Comments_date">
+						2020.01.02 16:00
+					</div>
+					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+					<div class="Blog_Comments_reply" >
+					</div>
+				</div>
+				<div class="paging_area">
+						<span>처음</span>
+						<span>이전</span>
+						<span>1</span>
+						<span>다음</span>
+						<span>마지막</span>
+					</div>
+					<div class="Blog_Comments_textbox_area">
+						<div class="Blog_Comments_textbox_author">
+							작성자 : ${sBmNm}
+						</div>
+						<textarea class="Blog_Comments_textbox"  placeholder="댓글을 작성하려면 로그인 해주세요" id="Comment_textarea"></textarea>
+						<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200<input type="button" id="Comment_add" value="등록"></div>
+						
+					</div>
+			</div>
 		</div>
 		<c:choose>
 			<c:when test="${sBmNo eq data.BM_NO}"> 

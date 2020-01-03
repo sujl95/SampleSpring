@@ -93,6 +93,11 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getBMM(params);
 	}
 
+	@Override
+	public HashMap<String, String> getBMCT(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getBMCT(params);
+	}
+
 		
 
 }

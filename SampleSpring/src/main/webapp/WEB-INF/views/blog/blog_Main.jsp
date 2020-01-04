@@ -97,7 +97,43 @@ $(document).ready(function() {
 		width: "300px",
 		height: "100%"
 	});
+	
+	
 });
+function reloadcateList(data) {
+	var html ="";
+	
+	if(data.length == 0 ) {
+		html += "<span\">조회된 데이터가 없습니다.</span>";
+	} else {
+			html += "<li>                                                               ";
+			html += "<a>카테고리 <span class=\"c_cnt\">(20)</span></a>                    ";
+			html += "</li>                                                              ";
+			html += "	<ul>                                                            ";
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+CT1.CNT+")</span></a>            ";
+			html += "		</li>						                                ";
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+CT2.CNT+")</span></a>        ";
+			html += "		</li>						                                ";
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+CT3.CNT+")</span></a> ";
+			html += "		</li>						                                ";
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+CT4.CNT+")</span></a>           ";
+			html += "		</li>						                                ";
+			html += "		<li class=\"cate_CT\">                                                        ";
+			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+CT5.CNT+")</span></a>               ";
+			html += "		</li>						                                ";
+			html += "	</ul>                                                           ";
+			if (data.CT5 == data.CT5) {
+				$(".cate_CT").css("display","none");
+				console.log("체크");
+			}
+			console.log(data.CT5);
+	}                                                                                  
+ 	$(".category_list").html(html);
+}
 function reloadList() {
 	var params = $("#actionForm").serialize();
 	$.ajax({ 
@@ -108,6 +144,7 @@ function reloadList() {
 		success:function(result) {
 			redrawList(result.list);
 			redrawPaging(result.pb);
+			reloadcateList(result.data);
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -117,7 +154,7 @@ function reloadList() {
 		
 	});
 }
-
+/* 게시글가져오기 */
 function redrawList(list) {
 	var html ="";
 	
@@ -188,28 +225,53 @@ function redrawPaging(pb) {
 		</h1>
 	</div>
 	<div class="category">
-		<ul class="">
-			<li>
-				<a>카테고리 <span class="c_cnt">(20)</span></a>
-			</li>
-				<ul>
-					<li>
-						<a>Server <span class="c_cnt">(3)</span></a>
-					</li>						
-					<li>
-						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
-					</li>						
-					<li>
-						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
-					</li>						
-					<li>
-						<a>Android <span class="c_cnt">(1)</span></a>
-					</li>						
-					<li>
-						<a>IOS <span class="c_cnt">(0)</span></a>
-					</li>						
-				</ul>
+<!-- 		<table class="category_table"> -->
+		
+<!-- 		</table> -->
+		<ul class="category_list">
+<!-- 			<li> -->
+<!-- 				<a>카테고리 <span class="c_cnt">(20)</span></a> -->
+<!-- 			</li> -->
+<!-- 				<ul> -->
+<!-- 					<li> -->
+<!-- 						<a>Server <span class="c_cnt">(3)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>PHP, Mysql <span class="c_cnt">(9)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>Android <span class="c_cnt">(1)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>IOS <span class="c_cnt">(0)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 				</ul> -->
 		</ul>
+<!-- 		<ul class=""> -->
+<!-- 			<li> -->
+<!-- 				<a>카테고리 <span class="c_cnt">(20)</span></a> -->
+<!-- 			</li> -->
+<!-- 				<ul> -->
+<!-- 					<li> -->
+<!-- 						<a>Server <span class="c_cnt">(3)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>PHP, Mysql <span class="c_cnt">(9)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>Android <span class="c_cnt">(1)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 					<li> -->
+<!-- 						<a>IOS <span class="c_cnt">(0)</span></a> -->
+<!-- 					</li>						 -->
+<!-- 				</ul> -->
+<!-- 		</ul> -->
 	</div>
 	<div class="">
 	</div>

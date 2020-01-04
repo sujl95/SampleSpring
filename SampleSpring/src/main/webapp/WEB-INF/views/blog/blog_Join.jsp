@@ -63,9 +63,9 @@ $(document).ready(function() {
 		} else if($.trim($("#bmPw").val()) == "") {
 			alert("비밀번호를 입력하세요.");
 			$("#bmPw").focus();
-		}  else if ($("#bmNm").val() != $("#pwTxt1").val()) {
+		}  else if ($.trim($("#bmPw").val()) != $.trim($("#pwTxt1").val())) {
 			alert("비밀번호가 일치하지 않습니다");
-			$("#bmNm").focus();
+			$("#bmPw").focus();
 		}  else if($.trim($("#bmNm").val()) == "") {
 			alert("이름을 입력하세요. ");
 		} else if($("#checkId").val() == 0) {

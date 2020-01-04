@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="blog">
+	<!-- 중복체크 -->
 	<select id="idCheck" parameterType="hashmap" resultType="Integer">
 		SELECT COUNT(*) AS CNT
 		FROM BLOG_BM
 		WHERE BM_ID = #{bmId}
 	</select>
-	<select id="insertBM" parameterType="hashmap" >
+	<!-- 회원가입 -->
+	<insert id="insertBM" parameterType="hashmap" >
 		INSERT INTO BLOG_BM(BM_NO, BM_ID, BM_PW, BM_NM) 
 		VALUES(BLOG_SEQ.NEXTVAL, #{bmId}, #{bmPw}, #{bmNm})
-	</select>
+	</insert>
+	<!-- 회원가입시 카테고리 추가 -->
+	<insert id="insertCT" parameterType="hashmap" >
+		INSERT INTO BLOG_CT(BM_NO) 
+		VALUES(BLOG_CT_SEQ.nextval)
+	</insert>
 	<select id="getBM" parameterType="hashmap" resultType="hashmap">
 		SELECT BM_NO, BM_NM 
 		FROM BLOG_BM
@@ -200,7 +207,7 @@
 	<!-- 게시글 등록 -->
 	<insert id="insertData" parameterType="hashmap">
 		INSERT INTO BLOG_B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
-		VALUES(BLOG_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
+		VALUES(BLOG_B_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
 	</insert>
 	
 	<!-- 회원 카데고리 가져오기 -->
@@ -208,5 +215,18 @@
 		SELECT CT.* , BM.BM_NM
 		FROM BLOG_CT CT INNER JOIN BLOG_BM BM ON BM.BM_NO = CT.BM_NO 
 		WHERE BM.BM_NO = #{bm_NO}
+	</select>
+	<!-- 카테고리설정 -->
+	<update id="updateCT" parameterType="hashmap">
+		UPDATE BLOG_CT SET CT1=#{categoryTxt1},CT2=#{categoryTxt2},CT3=#{categoryTxt3},CT4=#{categoryTxt4},CT5=#{categoryTxt5}
+		WHERE BM_NO= #{bmno}
+	</update>
+	<select id="getCTCnt" parameterType="hashmap" resultType="hashmap">
+		SELECT COUNT(CT_NAME) AS CNT
+		FROM BLOG_B B INNER JOIN BLOG_CT CT ON B.BM_NO = CT.BM_NO
+		WHERE 1=1 
+		AND DEL_YN = 1
+		AND B.BM_NO = #{bm_NO}
+		AND B.CT_NAME = (SELECT ${CT} FROM BLOG_CT WHERE BM_NO  = #{bm_NO});
 	</select>
 </mapper>

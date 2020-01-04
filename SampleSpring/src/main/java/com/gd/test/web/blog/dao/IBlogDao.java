@@ -37,7 +37,15 @@ public interface IBlogDao {
 
 	HashMap<String, String> getBMM(HashMap<String, String> params) throws Throwable;
 
+	void updateCT(HashMap<String, String> params) throws Throwable;
+
 	HashMap<String, String> getBMCT(HashMap<String, String> params) throws Throwable;
+
+	void insertCT(HashMap<String, String> params) throws Throwable;
+
+	int getCTCnt(HashMap<String, String> params) throws Throwable;
+
+
 
 
 }

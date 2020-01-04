@@ -28,6 +28,7 @@ html , body {
 .blank{
 	height : 100px;
 }
+/*  -----------------------카테고리 영역---------------------------------- */
 /* 카테고리 영역 */
 .category {
 	width : 100%;
@@ -35,6 +36,9 @@ html , body {
 	font-size: 14px;
 	text-indent: 20px;
 	line-height: 200%;
+}
+.category_table {
+	padding : 30px;
 }
 .category > ul > li > a:hover , .category > ul > ul > li > a:hover {
 	color : #77bbff;

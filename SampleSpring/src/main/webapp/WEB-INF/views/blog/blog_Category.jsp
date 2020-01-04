@@ -30,15 +30,15 @@ $(document).ready(function() {
 			var params = $("#actionForm").serialize();
 			$.ajax({
 				type : "post",
-				url : "bModifyAjax",
+				url : "bCategoryAjax",
 				dataType : "json",
 				data : params,
 				success:function(result) {
 					if(result.res=="SUCCESS") {
-						alert("회원정보 수정을 성공 하였습니다");
-						location.href = "aList";
+						alert("카테고리 등록을 성공 하였습니다");
+						location.href = "blog_Main";
 					} else {
-						alert("회원정보 수정을 실패 하였습니다");
+						alert("카테고리 등록을 실패 하였습니다");
 					}
 				},
 				error:function(request,status,error) {
@@ -63,13 +63,13 @@ $(document).ready(function() {
 <!-- 		</div> -->
 		<div class="Category_btn_area">
 			<form action="#" method="post" id="actionForm">
-				<input type="hidden" name="bmno" id="bmno" value="${data.BM_NO}"/><br/>
+				<input type="hidden" name="bmno" readonly="readonly" id="bmno" value="${data.BM_NO}"/><br/>
 				<input class="input_normal" type="text" name="nmTxt" id="nmTxt" value="${data.BM_NM}" placeholder="이름입력"/><br/>
-				<input class="input_normal" type="text" name="categoryTxt" id="category1Txt" placeholder="카테고리1입력" value="${data.CT1}"/><br/>
-				<input class="input_normal" type="text" name="categoryTxt" id="category2Txt" placeholder="카테고리2입력" value="${data.CT2}"/><br/>
-				<input class="input_normal" type="text" name="categoryTxt" id="category3Txt" placeholder="카테고리3입력" value="${data.CT3}"/><br/>
-				<input class="input_normal" type="text" name="categoryTxt" id="category4Txt" placeholder="카테고리4입력" value="${data.CT4}"/><br/>
-				<input class="input_normal" type="text" name="categoryTxt" id="category5Txt" placeholder="카테고리5입력" value="${data.CT5}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt1" id="category1Txt" placeholder="카테고리1입력" value="${data.CT1}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt2" id="category2Txt" placeholder="카테고리2입력" value="${data.CT2}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt3" id="category3Txt" placeholder="카테고리3입력" value="${data.CT3}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt4" id="category4Txt" placeholder="카테고리4입력" value="${data.CT4}"/><br/>
+				<input class="input_normal" type="text" name="categoryTxt5" id="category5Txt" placeholder="카테고리5입력" value="${data.CT5}"/><br/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="writeBtn" value="저장"/>
 				<input class="input_normal bgwhite pocursor txthover" type="button" id="cancelBtn" value="취소"/>
 			</form>

@@ -98,6 +98,24 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getBMCT(params);
 	}
 
+	@Override
+	public void updateCT(HashMap<String, String> params) throws Throwable {
+		iBlogDao.updateCT(params);
+	}
+
+//	카테고리 등록
+	@Override
+	public void insertCT(HashMap<String, String> params) throws Throwable {
+		iBlogDao.insertCT(params);
+	}
+
+//	카테고리 cnt
+	@Override
+	public int getCTCnt(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getCTCnt(params);
+	}
+
+
 		
 
 }

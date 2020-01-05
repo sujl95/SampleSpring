@@ -227,6 +227,28 @@
 		WHERE 1=1 
 		AND DEL_YN = 1
 		AND B.BM_NO = #{bm_NO}
-		AND B.CT_NAME = (SELECT ${CT} FROM BLOG_CT WHERE BM_NO  = #{bm_NO});
+		AND B.CT_NAME = (SELECT 
+		<if test="bm_NO != null">
+			<choose>
+				<when test="CT5 eq 5">
+				CT5
+				</when>
+				<when test="CT4 eq 4">
+				CT4
+				</when>
+				<when test="CT3 eq 3">
+				CT3
+				</when>
+				<when test="CT2 eq 2">
+				CT2
+				</when>
+				<when test="CT1 eq 1">
+				CT1
+				</when>
+			</choose>
+		</if>
+
+		
+		 FROM BLOG_CT WHERE BM_NO  = #{bm_NO});
 	</select>
 </mapper>

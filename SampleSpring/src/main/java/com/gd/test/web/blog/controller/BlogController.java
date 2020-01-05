@@ -213,18 +213,21 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlog(params);
-		System.out.println(String.valueOf(session.getAttribute("sBmNo")));
-		if (String.valueOf(session.getAttribute("sBmNo")) != null) {
+		System.out.println(session.getAttribute("sBmNo"));
+		if (session.getAttribute("sBmNo") != null) {
 			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 			HashMap<String,String> data = iBlogService.getBMCT(params);
 			System.out.println("data"+data);
 			modelMap.put("data",data);
+			
 			int catecnt[] = new int[5];
 			for (int i = 0 ; i < 5; i++) {
-				params.put("CT","CT"+(i+1) );
+				params.put("CT"+(i+1),"CT"+(i+1) );
+				System.out.println("params"+i+" =" +params);
 				catecnt[i] = iBlogService.getCTCnt(params);
 				modelMap.put("CT"+(i+1),catecnt[i]);
 			}
+			System.out.println(catecnt);
 		}
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);

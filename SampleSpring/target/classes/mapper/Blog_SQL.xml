@@ -254,4 +254,9 @@
 		AND DEL_YN = 1
 		AND B.BM_NO = #{bm_NO}
 	</select>
+	<!-- 글쓰기 수정 -->
+	<update id="updateData" parameterType="hashmap">
+		UPDATE BLOG_B SET B_TITLE =  #{title} , BM_NO = #{bm_no}, B_CON = #{con}
+		WHERE B_NO = #{no}
+	</update>
 </mapper>

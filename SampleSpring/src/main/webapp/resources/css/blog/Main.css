@@ -9,6 +9,22 @@ html , body {
 	background-color : #f1f1f1;
 	font-family: '나눔고딕',NanumGothic,'돋움',Dotum,'Apple SD Gothic Neo',Helvetica,Sans-serif;
 }
+/* 버튼 */
+.btn {
+	background-color : #e5e5e5;
+	color : #595959;
+	height : 30px;
+	width : 70px;
+	margin-left : 20px;
+	border : 1px solid #cacaca;
+	font-weight : 700;
+}
+
+.btn:hover {
+	background-color : #595959;
+	color : #e5e5e5;
+	cursor : pointer;
+}
 /* 왼쪽 메뉴 */
 .left_wrap{
 	display: inline-block;

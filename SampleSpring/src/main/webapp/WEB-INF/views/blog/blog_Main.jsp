@@ -52,6 +52,29 @@ $(document).ready(function() {
 		$("#actionForm").attr("action","blog_Category");
 		$("#actionForm").submit();
 	});
+	
+	$(".whole_body").slimScroll({
+		width: "968px",
+		height: "100%"
+	});
+	$(".left_wrap").slimScroll({
+		width: "300px",
+		height: "100%"
+	});
+	$(".setting").on("click",function(e) {
+		if($(".setting_area").css("display") == "none"){ 
+		 $(".setting_area")
+	     .addClass("on")
+		 .css({
+	       left: "672px",
+	       top: "37px"
+	     });
+		}
+		 else {
+			 $(".setting_area")
+		     .removeClass("on");
+		 }
+	});
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -72,29 +95,8 @@ $(document).ready(function() {
 		$("#actionForm").attr("action","blog_List");
 		$("#actionForm").submit();
 	});
-	$(".setting").on("click",function(e) {
-		if($(".setting_area").css("display") == "none"){ 
-		 $(".setting_area")
-	     .addClass("on")
-		 .css({
-	       left: "672px",
-	       top: "37px"
-	     });
-		}
-		 else {
-			 $(".setting_area")
-		     .removeClass("on");
-		 }
-	});
 	
-	$(".whole_body").slimScroll({
-		width: "968px",
-		height: "100%"
-	});
-	$(".left_wrap").slimScroll({
-		width: "300px",
-		height: "100%"
-	});
+	
 	
 	
 });
@@ -134,11 +136,6 @@ function reloadcateList(data, ct,cateAllcnt) {
 			html += "		</li>						                                ";				
 			}
 			html += "	</ul>                                                           ";
-			if (data.CT5 == data.CT5) {
-				$(".cate_CT").css("display","none");
-				console.log("체크");
-			}
-			console.log(data.CT5);
 	}                                                                                  
  	$(".category_list").html(html);
 }
@@ -293,7 +290,6 @@ function redrawPaging(pb) {
 						<div class="setting_hover" style="border-bottom : 1px solid #cacaca;" id="modifyBtn">회원 정보 수정</div><br>
 						<div class="setting_hover" id="categoryBtn">카테고리 설정</div>
 					</div>
-<!-- 					<input type="button" value="회원 정보 수정" id="modifyBtn"> -->
 				</c:when>
 				<c:otherwise>
 					<input type="button" value="로그인" id="loginBtn"  />&nbsp;

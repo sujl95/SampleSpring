@@ -120,6 +120,11 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getCTAllCnt(params);
 	}
 
+	@Override
+	public void updateData(HashMap<String, String> params) throws Throwable {
+		iBlogDao.updateData(params);
+	}
+
 
 		
 

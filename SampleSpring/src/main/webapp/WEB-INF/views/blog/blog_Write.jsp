@@ -37,10 +37,17 @@ $(document).ready(function() {
 	$("#writeBtn").on("click", function() {
 		location.href = "blog_Write";
 	});
+	
 	$("#modifyBtn").on("click",function() {
 		$("#actionForm").attr("action","blog_Modify");
 		$("#actionForm").submit();
 	});
+	
+	$("#categoryBtn").on("click",function() {
+		$("#actionForm").attr("action","blog_Category");
+		$("#actionForm").submit();
+	});
+	
 	$(".whole_body").slimScroll({
 		width: "968px",
 		height: "100%"
@@ -48,6 +55,20 @@ $(document).ready(function() {
 	$(".left_wrap").slimScroll({
 		width: "300px",
 		height: "100%"
+	});
+	$(".setting").on("click",function(e) {
+		if($(".setting_area").css("display") == "none"){ 
+		 $(".setting_area")
+	     .addClass("on")
+		 .css({
+	       left: "672px",
+	       top: "37px"
+	     });
+		}
+		 else {
+			 $(".setting_area")
+		     .removeClass("on");
+		 }
 	});
 	CKEDITOR.replace("con", {
 		resize_enabled : false,
@@ -147,25 +168,34 @@ $(document).ready(function() {
 			<div class="gnb_search_area">
 				 <form action="#" id="actionForm">
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
-					<select name="searchGbn">
-						<option value="0">제목</option>
-						<option value="1">작성자</option>
-						<option value="2">제목 + 작성자</option>
-					</select>
-					<input type="text" name="searchTxt"/>
-					<input type="button" value="검색" id="searchBtn"/>
+					<div class="search_area">
+						<select name="searchGbn" style="height: 100%;">
+							<option value="0">제목</option>
+							<option value="1">작성자</option>
+							<option value="2">제목 + 작성자</option>
+						</select>
+						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
+						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
+					
 					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn"/>
+						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
+					</div>
 				</form>
 			</div>
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
-					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
-					<input type="button" value="회원 정보 수정" id="modifyBtn">
+					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn" style="height: 30px; vertical-align: top;"/>
+					<div class="setting">
+						설정
+					</div>
+					<div class="setting_area">
+						<div class="setting_hover" style="border-bottom : 1px solid #cacaca;" id="modifyBtn">회원 정보 수정</div><br>
+						<div class="setting_hover" id="categoryBtn">카테고리 설정</div>
+					</div>
 				</c:when>
 				<c:otherwise>
-					<input type="button" value="로그인" id="loginBtn"/>&nbsp;
+					<input type="button" value="로그인" id="loginBtn"  />&nbsp;
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
@@ -174,7 +204,7 @@ $(document).ready(function() {
 				<span>블로그 홈</span>&nbsp; | &nbsp;
 			</div>
 		</div>
-	</div>
+	</div>	
 	<div class="gnb_area_bottom">
 		<div class="btn_area_left">
 			 

@@ -125,6 +125,31 @@ public class BlogController {
 		return mapper.writeValueAsString(modelMap);
 	}
 	
+//	글쓰기 수정
+	@RequestMapping(value = "/blog_Update")
+	public ModelAndView bUpdate(@RequestParam HashMap<String,String>  params,HttpSession session, ModelAndView mav) throws Throwable  {
+		HashMap<String, String> data = iBlogService.getData(params);
+		mav.addObject("data", data);
+		mav.setViewName("blog/blog_Update");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/bUpdateAjax",
+					method = RequestMethod.POST,
+					produces = "test/json;charset=UTF-8")
+	@ResponseBody
+	public String bUpdateAjax(@RequestParam HashMap<String,String>params, ModelAndView mav) throws Throwable{
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String,Object> modelMap = new HashMap<String,Object>();
+		try {
+			iBlogService.updateData(params);
+			modelMap.put("res","SUCCESS");
+		} catch (Exception e) {
+			e.printStackTrace();
+			modelMap.put("res", "Failed");
+		}
+		 return mapper.writeValueAsString(modelMap);
+	}
 //	중복체크
 	@RequestMapping(value = "/bIdCheckAjax",
 					method = RequestMethod.POST,
@@ -243,7 +268,7 @@ public class BlogController {
 			method = RequestMethod.POST,
 			produces = "test/json;charset=UTF-8")
 	@ResponseBody 
-	public String blogListAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
+	public String blogListAjax(@RequestParam HashMap<String, String>params,HttpSession session, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
 		
@@ -253,7 +278,7 @@ public class BlogController {
 		
 		params.put("startCnt" , Integer.toString(pb.getStartCount()));
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
-		
+		params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
 		System.out.println("params = " +params);
 		iBlogService.updateHit(params);

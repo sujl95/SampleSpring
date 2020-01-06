@@ -47,6 +47,9 @@ public interface IBlogDao {
 
 	int getCTAllCnt(HashMap<String, String> params) throws Throwable;
 
+	void updateData(HashMap<String, String> params) throws Throwable;
+
+
 
 
 

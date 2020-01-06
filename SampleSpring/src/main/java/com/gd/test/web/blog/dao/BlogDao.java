@@ -117,5 +117,10 @@ public class BlogDao implements IBlogDao{
 	public int getCTAllCnt(HashMap<String, String> params) throws Throwable {
 		return sqlSession.selectOne("blog.getCTAllCnt",params);
 	}
+
+	@Override
+	public void updateData(HashMap<String, String> params) throws Throwable {
+		sqlSession.update("blog.updateData",params);
+	}
 	
 }

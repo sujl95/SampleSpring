@@ -16,8 +16,6 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
-	console.log(${sBmNo});
-// 	console.log(data.BM_NO);
 	$("#logoutBtn").on("click", function() {
 		location.href = "blog_Logout";
 	});
@@ -28,10 +26,11 @@ $(document).ready(function() {
 	$(".logo_wrap").on("click",function() {
 		location.href = "blog_Main";
 	});
-
+	
 	$("#joinBtn").on("click", function() {
 		location.href = "blog_Join";
 	});
+	
 	$("#searchBtn").on("click", function() {
 		$("#page").val("1");
 		reloadList();
@@ -40,11 +39,51 @@ $(document).ready(function() {
 		location.href = "blog_Write";
 	});
 	
+	$("#modifyBtn").on("click",function() {
+		$("#actionForm").attr("action","blog_Modify");
+		$("#actionForm").submit();
+	});
+	
+	$("#categoryBtn").on("click",function() {
+		$("#actionForm").attr("action","blog_Category");
+		$("#actionForm").submit();
+	});
+	
+	$(".whole_body").slimScroll({
+		width: "968px",
+		height: "100%"
+	});
+	$(".left_wrap").slimScroll({
+		width: "300px",
+		height: "100%"
+	});
+	$(".setting").on("click",function(e) {
+		if($(".setting_area").css("display") == "none"){ 
+		 $(".setting_area")
+	     .addClass("on")
+		 .css({
+	       left: "672px",
+	       top: "37px"
+	     });
+		}
+		 else {
+			 $(".setting_area")
+		     .removeClass("on");
+		 }
+	});
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
 			$("#page").val($(this).attr("name"));
 			reloadList();	
+		}
+	});
+	$("#updateBtn").on("click", function() {
+		if ('${param.bmno}' == '${sBmNo}') {
+			$("#actionForm").attr("action","blog_Update");
+			$("#actionForm").submit();
+		} else {
+			alert("본인이 올린글만 수정가능합니다")
 		}
 	});
 	$("tbody").on("click","tr",function() {
@@ -55,25 +94,11 @@ $(document).ready(function() {
 		}
 	});
 	
-	$("#modifyBtn").on("click",function() {
-		$("#actionForm").attr("action","aModify");
-		$("#actionForm").submit();
-	});
-	
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		$("#no").val($(this).attr("name"));
 		console.log($("#no").val());
 	});
-	$(".whole_body").slimScroll({
-		width: "968px",
-		height: "100%"
-	});
-	
-	$(".left_wrap").slimScroll({
-		width: "300px",
-		height: "100%"
-	});
-	
+
 	$("#Comment_textarea").on("keyup",function() {
 		var content = $(this).val();
 		console.log(content.length);
@@ -110,8 +135,6 @@ $(document).ready(function() {
 		}
 	});
 	
-	
-	
 });
 
 function replyshow(obj){
@@ -138,6 +161,7 @@ function reloadList() {
 			redrawList(result.list);
 			redrawList1(result.data);
 			redrawPaging(result.pb);
+			reloadcateList(result.data, result.CT, result.cateAllcnt);
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -168,7 +192,45 @@ function reloadDetailList() {
 		
 	});
 }
-
+function reloadcateList(data, ct,cateAllcnt) {
+	var html ="";
+	
+	if(data.length == 0 ) {
+		html += "<span\">조회된 데이터가 없습니다.</span>";
+	} else {
+			html += "<li>                                                               ";
+			html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
+			html += "</li>                                                              ";
+			html += "	<ul>                                                            ";
+			if(typeof data.CT1 != "undefined") {
+				html += "		<li>                                                        ";
+				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
+				html += "		</li>						                                ";
+			}
+			if(typeof data.CT2 != "undefined") {
+				html += "		<li>                                                        ";
+				html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
+				html += "		</li>						                                ";				
+			}
+			if(typeof data.CT3 != "undefined") {
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+ct[2]+")</span></a> ";
+			html += "		</li>						                                ";
+			}
+			if(typeof data.CT4 != "undefined") {
+			html += "		<li>                                                        ";
+			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
+			html += "		</li>						                                ";
+			}
+			if(typeof data.CT5 != "undefined") {
+			html += "		<li class=\"cate_CT\">                                                        ";
+			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
+			html += "		</li>						                                ";				
+			}
+			html += "	</ul>                                                           ";
+	}                                                                                  
+ 	$(".category_list").html(html);
+}
 
 function redrawList(list) {
 	var html ="";
@@ -200,12 +262,9 @@ function redrawList1(data) {
 		html += "</tr>";
 	} else {
 			html += "<div name=\"" + data.B_NO + "\">";
-// 			html += "<td>" + list[i].B_NO +"</td>";
 			html += "" + data.B_TITLE +"<br/>";
-// 			html += "<td>" + list[i].BM_NM +"</td>";
 			html += "" + data.B_DT +"<br/>";
 			html += "" + data.B_HIT +"<br/>";
-			
 			html += "<div class=\"Details_header\" name=\"" + data.B_NO + "\">";
 			html += "	<div class=\"Details_title\">";
 			html += "		<h2>"+ data.B_TITLE +"</h2>";
@@ -218,7 +277,6 @@ function redrawList1(data) {
 			html += ""+  data.B_CON + "";
 			html += "</div>";
 	}
-	
 	$(".Blog_Details").html(html);
 	
 }
@@ -261,11 +319,11 @@ function redrawPaging(pb) {
 <div class="left_wrap">
 	<div class="logo_wrap">
 		<h1 style="cursor:pointer;">
-			 SLOG
+			SLOG
 		</h1>
 	</div>
 	<div class="category">
-		<ul class="">
+		<ul class="category_list">
 			<li>
 				<a>카테고리 <span class="c_cnt">(20)</span></a>
 			</li>
@@ -288,9 +346,8 @@ function redrawPaging(pb) {
 				</ul>
 		</ul>
 	</div>
-	<div class="">
-	</div>
 </div>
+
 <div class="whole_body">
 	<div class="wrap">
 		<div class="gnb_area">
@@ -300,26 +357,34 @@ function redrawPaging(pb) {
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
-					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
-					<select name="searchGbn">
-						<option value="0">제목</option>
-						<option value="1">작성자</option>
-						<option value="2">제목 + 작성자</option>
-					</select>
-					<input type="text" name="searchTxt"/>
-					<input type="button" value="검색" id="searchBtn"/>
+					<div class="search_area">
+						<select name="searchGbn" style="height: 100%;">
+							<option value="0">제목</option>
+							<option value="1">작성자</option>
+							<option value="2">제목 + 작성자</option>
+						</select>
+						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
+						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
+					
 					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn"/>
+						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
+					</div>
 				</form>
 			</div>
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
-					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
-					<input type="button" value="회원 정보 수정" id="modifyBtn">
+					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn" style="height: 30px; vertical-align: top;"/>
+					<div class="setting">
+						설정
+					</div>
+					<div class="setting_area">
+						<div class="setting_hover" style="border-bottom : 1px solid #cacaca;" id="modifyBtn">회원 정보 수정</div><br>
+						<div class="setting_hover" id="categoryBtn">카테고리 설정</div>
+					</div>
 				</c:when>
 				<c:otherwise>
-					<input type="button" value="로그인" id="loginBtn"/>&nbsp;
+					<input type="button" value="로그인" id="loginBtn"  />&nbsp;
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
@@ -328,28 +393,18 @@ function redrawPaging(pb) {
 				<span>블로그 홈</span>&nbsp; | &nbsp;
 			</div>
 		</div>
-	</div>
+	</div>	
 	<div class="gnb_area_bottom">
 		<div class="btn_area_left">
 		</div>
 	</div>
-<!-- 	<div class="contents_area"> -->
-<!-- 		<div class="contents_title_area"> -->
-<!-- 			<div class="contents_title"> -->
-<!-- 				안녕하세요 -->
-<!-- 			</div> -->
-<!-- 			<div class="contents_author_area"> -->
-<!-- 				by <span>The Wing</span> &nbsp;작성일<span> 2019-12-18</span> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
 	<div class="Blog_Details_area">
 		<form action="#" method="post" id="actionForm">
 			<input type="hidden" name="page" value="${param.page}"/>
 			<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
 			<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
-			<input type="hidden" name="no" value="${data.B_NO}"/>
-			<input type="hidden" name="bm_no" value="${data.BM_NO}"/>
+			<input type="hidden" name="Details_no" value="${data.B_NO}"/>
+			<input type="hidden" name="Details_bm_no" value="${data.BM_NO}"/>
 		</form>
 		<div class="Blog_Details">
 			<div class="Details_header">

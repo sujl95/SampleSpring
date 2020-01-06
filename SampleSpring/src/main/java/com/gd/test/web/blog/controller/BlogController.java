@@ -113,6 +113,7 @@ public class BlogController {
 	public String bWriteAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
+		System.out.println("params = " + params);
 		try {
 			iBlogService.insertData(params);
 			modelMap.put("res","SUCCESS");
@@ -213,21 +214,22 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlog(params);
-		System.out.println(session.getAttribute("sBmNo"));
+//		System.out.println(session.getAttribute("sBmNo"));
 		if (session.getAttribute("sBmNo") != null) {
 			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 			HashMap<String,String> data = iBlogService.getBMCT(params);
 			System.out.println("data"+data);
-			modelMap.put("data",data);
-			
-			int catecnt[] = new int[5];
-			for (int i = 0 ; i < 5; i++) {
-				params.put("CT"+(i+1),"CT"+(i+1) );
-				System.out.println("params"+i+" =" +params);
+			modelMap.put("data", data);
+			int cateAllcnt = 0;
+			cateAllcnt = iBlogService.getCTAllCnt(params);
+			modelMap.put("cateAllcnt", cateAllcnt);
+			int[] catecnt = {0,0,0,0,0};
+			for(int i = 0 ; i < 5; i++) {
+				params.put("CT", (i+1)+"");
+				System.out.println("params = " +params);
 				catecnt[i] = iBlogService.getCTCnt(params);
-				modelMap.put("CT"+(i+1),catecnt[i]);
 			}
-			System.out.println(catecnt);
+			modelMap.put("CT", catecnt);
 		}
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
@@ -236,7 +238,7 @@ public class BlogController {
 		
 		return mapper.writeValueAsString(modelMap);
 	}
-//	블로그리스트
+//	개인블로그리스트
 	@RequestMapping(value = "/blogListAjax",
 			method = RequestMethod.POST,
 			produces = "test/json;charset=UTF-8")
@@ -253,7 +255,7 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
-		
+		System.out.println("params = " +params);
 		iBlogService.updateHit(params);
 		HashMap<String,String> data = iBlogService.getData(params);
 		modelMap.put("data", data);
@@ -283,7 +285,7 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
-		
+		System.out.println("blogDetailAjax=params = "+ params);
 		iBlogService.updateHit(params);
 		HashMap<String,String> data = iBlogService.getData(params);
 		modelMap.put("data", data);

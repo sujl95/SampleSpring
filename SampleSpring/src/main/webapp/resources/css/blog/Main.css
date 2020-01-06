@@ -4,6 +4,7 @@ html , body {
 	height : 100%;
 	margin : 0 ;
 	font-size : 0;
+	min-width : 1300px;
 	min-height:100%;
 	background-color : #f1f1f1;
 	font-family: '나눔고딕',NanumGothic,'돋움',Dotum,'Apple SD Gothic Neo',Helvetica,Sans-serif;
@@ -83,7 +84,7 @@ html , body {
 }
 .gnb_search_area {
 	display : inline-block;
-	
+	height : 30px;
 }
 .gnb_btn_area {
 	margin-top : 10px;
@@ -98,7 +99,7 @@ html , body {
 .setting {
 	display : inline-block;
 	width : 30px;
-	height : 15px;
+	height : 18px;
 	border : 1px solid #cacaca;
 	cursor : pointer;
 	padding : 5px;
@@ -309,12 +310,14 @@ html , body {
 .Blog_list_area {
 	width : 100%;
 	text-align: left;
+	
 }
 .Blog_contents_area {
 	background-color : #FFFFFF;
 	padding : 10px;
 	border : 1px solid #595959;
 	margin : 20px;
+	height : 180px;
 	
 }
 .Blog_contents_author {
@@ -349,6 +352,10 @@ html , body {
 	margin-top : 10px;
 	font-size : 13px !important;
 	color : #666666 !important; 
+	white-space: nowrap;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	height : 40px;
 	
 }
 .Blog_contents_contents > img {
@@ -357,7 +364,6 @@ html , body {
 	color : #666666 !important;
 	width : 0 !important;
 	height : 0 !important; 
-	
 }
 .Blog_contents_contents > span {
 	margin-top : 10px;
@@ -530,6 +536,7 @@ html , body {
 	color : #999999;
 	font-size : 13px;
 	display : inline-block;
+	margin-top : 20px;
 }
 /* 댓글 텍스트박스 작성자 */
 .Blog_Comments_textbox_author{
@@ -538,3 +545,29 @@ html , body {
 	font-weight : bold;
 	margin-bottom : 5px;
 }
+
+/* 글쓰기 */
+.cke_contents {
+	height : 500px !important;
+}
+/* 상단바 검색영역 */
+.search_area {
+	display : block;
+	width : 400px;
+	height : 30px;
+}
+
+/* -------------------------글쓰기---------------- */
+/* 글쓰기 테이블 */
+.write_table {
+	width: calc(100% - 100px);
+	font-size : 14px;
+}
+
+.btn_area{
+	text-align: right;
+	padding : 20px;
+	margin-right : 80px;
+}
+
+

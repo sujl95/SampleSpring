@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
+<link rel="stylesheet" type="text/css" href="resources/css/blog/btn.css" />
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
@@ -15,6 +16,8 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
+	console.log(${sBmNo});
+// 	console.log(data.BM_NO);
 	$("#logoutBtn").on("click", function() {
 		location.href = "blog_Logout";
 	});
@@ -50,9 +53,6 @@ $(document).ready(function() {
 			$("#no").val($(this).attr("name"));
 			reloadDetailList();
 		}
-		
-// 		$("#actionForm").attr("action","aDetails");
-// 		$("#actionForm").submit();
 	});
 	
 	$("#modifyBtn").on("click",function() {
@@ -63,8 +63,6 @@ $(document).ready(function() {
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		$("#no").val($(this).attr("name"));
 		console.log($("#no").val());
-// 		$("#actionForm").attr("action","aDetails");
-// 		$("#actionForm").submit();
 	});
 	$(".whole_body").slimScroll({
 		width: "968px",
@@ -77,13 +75,8 @@ $(document).ready(function() {
 	});
 	
 	$("#Comment_textarea").on("keyup",function() {
-// 		var $Comment_textarea = $("#Comment_textarea");
-// 		var $Comment_cnt	= $("#Comment_cnt");
-// 		console.log($Comment_textarea.length());
-// 		$Comment_cnt.val($Comment_textarea.size());
 		var content = $(this).val();
 		console.log(content.length);
-// 	    $('#Comment_cnt').html("("+content.length+" / 최대 200자)");    //글자수 실시간 카운팅
 	    $('.Comment_cnt').html(content.length);    //글자수 실시간 카운팅
 
 	    if (content.length > 200){
@@ -110,14 +103,10 @@ $(document).ready(function() {
 			$(this).parent().children(".Blog_Comments_reply").show();
 			$(this).css("background-color","#cacaca");
 			$(this).css("color","#FFFFFF");
-// 			$(".Blog_Comments_reply_btn").css("background-color","#cacaca");
-// 			$(".Blog_Comments_reply_btn").css("color","#FFFFFF");
 		}else{
 			$(this).parent().children(".Blog_Comments_reply").hide();
 			$(this).css("background-color","#F0F0F0");
 			$(this).css("color","black");
-// 			$(".Blog_Comments_reply_btn").css("background-color","#F0F0F0");
-// 			$(".Blog_Commen	ts_reply_btn").css("color","black");
 		}
 	});
 	
@@ -191,9 +180,7 @@ function redrawList(list) {
 	} else {
 		for(var i in list) {
 			html += "<tr name=\"" + list[i].B_NO + "\">";
-// 			html += "<td>" + list[i].B_NO +"</td>";
 			html += "<th>" + list[i].B_TITLE +"</th>";
-// 			html += "<td>" + list[i].BM_NM +"</td>";
 			html += "<td>" + list[i].B_DT +"</td>";
 			html += "<td>" + list[i].B_HIT +"</td>";
 			html += "</tr>";
@@ -201,30 +188,6 @@ function redrawList(list) {
 	}
 	
 	$("tbody").html(html);
-// 	var html ="";
-	
-// 	if(list.length == 0 ) {
-// 		html += "<span\">조회된 데이터가 없습니다.</span>";
-// 	} else {
-// 		for(var i in list) {
-// 			html += "<div name=\"" + list[i].B_NO + "\" class=\"Blog_contents_area\">"
-// 			html += "	<div class=\"Blog_contents_author\">"
-// 			html += "		<div class=\"author\">" + list[i].BM_NM + "</div>"
-// 			html += "		<div class=\"time\">" + list[i].B_DT + "</div>"
-// 			html += "	\"</div>"
-// 			html += "	<div class=\"Blog_contents_header\">"
-// 			html += "	" + list[i].B_TITLE + "</div>"
-// 			html += "	<div class=\"Blog_contents_contents\">"
-// 			html += "	"+ list[i].B_CON + "</div>"
-// 			html += "	<div class=\"Blog_contents_comment\">"
-// 			html += "	공감<span>55</span> 댓글 <span>7</span>"
-// 			html += "	</div>"
-// 			html += "</div>"
-// 		}
-// 	}
-// // 	$("tbody").html(html);
-//  	$(".Blog_list_area").html(html);
-	
 }
 function redrawList1(data) {
 	var html ="";
@@ -262,13 +225,13 @@ function redrawList1(data) {
 function redrawPaging(pb) {
 	var html ="";
 	//첫페이지
-	html += "<span name=\"1\">처음</span>&nbsp;";
+	html += "<span name=\"1\"><<</span>&nbsp;";
 	//이전페이지
 	
 	if($("#page").val() == "1" ) {
-		html += "<span name=\"1\">이전</span>&nbsp;";
+		html += "<span name=\"1\"><</span>&nbsp;";
 	} else {
-		html += "<span name=\"" + ($("#page").val() * 1 - 1) + "\">이전</span>&nbsp;";
+		html += "<span name=\"" + ($("#page").val() * 1 - 1) + "\"><</span>&nbsp;";
 	}
 	
 	//숫자
@@ -282,13 +245,13 @@ function redrawPaging(pb) {
 	//다음페이지
 	
 	if($("#page").val() == pb.maxPcount ) {
-		html += "<span name=\""+pb.maxPcount+ "\">다음</span>&nbsp;";
+		html += "<span name=\""+pb.maxPcount+ "\">></span>&nbsp;";
 	} else {
-		html += "<span name=\"" + ($("#page").val() * 1 + 1) + "\">다음</span>&nbsp;";
+		html += "<span name=\"" + ($("#page").val() * 1 + 1) + "\">></span>&nbsp;";
 	}
 	
 	//마지막
-	html += "<span name=\"" + pb.maxPcount + "\">마지막</span>";
+	html += "<span name=\"" + pb.maxPcount + "\">>></span>";
 	
 	$(".paging_area").html(html);
 }
@@ -415,7 +378,7 @@ function redrawPaging(pb) {
 					<div class="Blog_Comments_date">
 						2020.01.02 16:00
 					</div>
-					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
 					<div class="Blog_Comments_reply" >
 					</div>
 				</div>
@@ -429,7 +392,7 @@ function redrawPaging(pb) {
 					<div class="Blog_Comments_date">
 						2020.01.02 16:00
 					</div>
-					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
 					<div class="Blog_Comments_reply" >
 					</div>
 				</div>
@@ -443,7 +406,7 @@ function redrawPaging(pb) {
 					<div class="Blog_Comments_date">
 						2020.01.02 16:00
 					</div>
-					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
 					<div class="Blog_Comments_reply" >
 					</div>
 				</div>
@@ -457,7 +420,7 @@ function redrawPaging(pb) {
 					<div class="Blog_Comments_date">
 						2020.01.02 16:00
 					</div>
-					<input type="button" class="Blog_Comments_reply_btn" value="답글" >
+<!-- 					<input type="button" class="Blog_Comments_reply_btn"  value="답글" > -->
 					<div class="Blog_Comments_reply" >
 					</div>
 				</div>
@@ -473,21 +436,23 @@ function redrawPaging(pb) {
 							작성자 : ${sBmNm}
 						</div>
 						<textarea class="Blog_Comments_textbox"  placeholder="댓글을 작성하려면 로그인 해주세요" id="Comment_textarea"></textarea>
-						<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200<input type="button" id="Comment_add" value="등록"></div>
+						<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
 						
 					</div>
 			</div>
 		</div>
-		<c:choose>
-			<c:when test="${sBmNo eq data.BM_NO}"> 
-				<input type="button" value="목록" id="listBtn"/>
-				<input type="button" value="수정" id="updateBtn"/>
-				<input type="button" value="삭제" id="deleteBtn"/>
-			</c:when>
-			<c:otherwise>
-			 	<input type="button" value="목록" id="listBtn"/>
-			</c:otherwise>
-		</c:choose>
+		<div class="btn_area" style="margin-right: 40px;">
+			<c:choose>
+				<c:when test="${sBmNo eq param.bmno}"> 
+					<input type="button" class="btn" value="목록" id="listBtn"/>
+					<input type="button" class="btn" value="수정" id="updateBtn"/>
+					<input type="button" class="btn" value="삭제" id="deleteBtn"/>
+				</c:when>
+				<c:otherwise>
+				 	<input type="button" class="btn" value="목록" id="listBtn"/>
+				</c:otherwise>
+			</c:choose>
+		</div>
 	</div>
 	<div class="table_area">
 		<div class="Blog_table_list">
@@ -518,11 +483,11 @@ function redrawPaging(pb) {
 		<div class="Blog_list_area">
 		</div>
 		<div class="paging_area">
-			<span>처음</span>
-			<span>이전</span>
+			<span><<</span>
+			<span><</span>
 			<span>1</span>
-			<span>다음</span>
-			<span>마지막</span>
+			<span>></span>
+			<span>>></span>
 		</div>
 	</div>
 </div>

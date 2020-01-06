@@ -115,6 +115,11 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getCTCnt(params);
 	}
 
+	@Override
+	public int getCTAllCnt(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getCTAllCnt(params);
+	}
+
 
 		
 

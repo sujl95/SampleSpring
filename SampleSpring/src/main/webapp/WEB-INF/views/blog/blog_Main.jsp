@@ -6,7 +6,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<!-- Main css -->
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
+<!-- btn -->
+<link rel="stylesheet" type="text/css" href="resources/css/blog/btn.css" />
+<!-- Main js -->
+<script type="text/javascript" src=>"resources/script/blog/Main.js"</script>
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
@@ -38,14 +43,6 @@ $(document).ready(function() {
 		location.href = "blog_Write";
 	});
 	
-	$(".paging_area").on("click", "span", function() {
-		console.log($(this).attr("name"));
-		if($(this).attr("name") != "") {
-			$("#page").val($(this).attr("name"));
-			reloadList();	
-		}
-	});
-	
 	$("#modifyBtn").on("click",function() {
 		$("#actionForm").attr("action","blog_Modify");
 		$("#actionForm").submit();
@@ -55,6 +52,14 @@ $(document).ready(function() {
 		$("#actionForm").attr("action","blog_Category");
 		$("#actionForm").submit();
 	});
+	$(".paging_area").on("click", "span", function() {
+		console.log($(this).attr("name"));
+		if($(this).attr("name") != "") {
+			$("#page").val($(this).attr("name"));
+			reloadList();	
+		}
+	});
+	
 	
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		var arr = [];
@@ -80,13 +85,6 @@ $(document).ready(function() {
 			 $(".setting_area")
 		     .removeClass("on");
 		 }
-// 		 $(".setting_area")
-// 	     .addClass("contextOpened")
-// 	     .css({
-// 	       display: "block",
-// 	       left: jsEvent.pageX,
-// 	       top: jsEvent.pageY
-// 	     });
 	});
 	
 	$(".whole_body").slimScroll({
@@ -100,31 +98,41 @@ $(document).ready(function() {
 	
 	
 });
-function reloadcateList(data) {
+function reloadcateList(data, ct,cateAllcnt) {
 	var html ="";
 	
 	if(data.length == 0 ) {
 		html += "<span\">조회된 데이터가 없습니다.</span>";
 	} else {
 			html += "<li>                                                               ";
-			html += "<a>카테고리 <span class=\"c_cnt\">(20)</span></a>                    ";
+			html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
 			html += "</li>                                                              ";
 			html += "	<ul>                                                            ";
+			if(typeof data.CT1 != "undefined") {
+				html += "		<li>                                                        ";
+				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
+				html += "		</li>						                                ";
+			}
+			if(typeof data.CT2 != "undefined") {
+				html += "		<li>                                                        ";
+				html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
+				html += "		</li>						                                ";				
+			}
+			if(typeof data.CT3 != "undefined") {
 			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+CT1.CNT+")</span></a>            ";
+			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+ct[2]+")</span></a> ";
 			html += "		</li>						                                ";
+			}
+			if(typeof data.CT4 != "undefined") {
 			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+CT2.CNT+")</span></a>        ";
+			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
 			html += "		</li>						                                ";
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+CT3.CNT+")</span></a> ";
-			html += "		</li>						                                ";
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+CT4.CNT+")</span></a>           ";
-			html += "		</li>						                                ";
+			}
+			if(typeof data.CT5 != "undefined") {
 			html += "		<li class=\"cate_CT\">                                                        ";
-			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+CT5.CNT+")</span></a>               ";
-			html += "		</li>						                                ";
+			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
+			html += "		</li>						                                ";				
+			}
 			html += "	</ul>                                                           ";
 			if (data.CT5 == data.CT5) {
 				$(".cate_CT").css("display","none");
@@ -136,6 +144,7 @@ function reloadcateList(data) {
 }
 function reloadList() {
 	var params = $("#actionForm").serialize();
+	console.log(params);
 	$.ajax({ 
 		type : "post",
 		url : "bListAjax",
@@ -144,7 +153,7 @@ function reloadList() {
 		success:function(result) {
 			redrawList(result.list);
 			redrawPaging(result.pb);
-			reloadcateList(result.data);
+			reloadcateList(result.data, result.CT, result.cateAllcnt);
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -177,7 +186,6 @@ function redrawList(list) {
 			html += "</div><hr>"
 		}
 	}
-// 	$("tbody").html(html);
  	$(".Blog_list_area").html(html);
 	
 }
@@ -185,13 +193,13 @@ function redrawList(list) {
 function redrawPaging(pb) {
 	var html ="";
 	//첫페이지
-	html += "<span name=\"1\">처음</span>&nbsp;";
+	html += "<span name=\"1\"><<</span>&nbsp;";
 	//이전페이지
 	
 	if($("#page").val() == "1" ) {
-		html += "<span name=\"1\">이전</span>&nbsp;";
+		html += "<span name=\"1\"><</span>&nbsp;";
 	} else {
-		html += "<span name=\"" + ($("#page").val() * 1 - 1) + "\">이전</span>&nbsp;";
+		html += "<span name=\"" + ($("#page").val() * 1 - 1) + "\"><</span>&nbsp;";
 	}
 	
 	//숫자
@@ -205,13 +213,13 @@ function redrawPaging(pb) {
 	//다음페이지
 	
 	if($("#page").val() == pb.maxPcount ) {
-		html += "<span name=\""+pb.maxPcount+ "\">다음</span>&nbsp;";
+		html += "<span name=\""+pb.maxPcount+ "\">></span>&nbsp;";
 	} else {
-		html += "<span name=\"" + ($("#page").val() * 1 + 1) + "\">다음</span>&nbsp;";
+		html += "<span name=\"" + ($("#page").val() * 1 + 1) + "\">></span>&nbsp;";
 	}
 	
 	//마지막
-	html += "<span name=\"" + pb.maxPcount + "\">마지막</span>";
+	html += "<span name=\"" + pb.maxPcount + "\">>></span>";
 	
 	$(".paging_area").html(html);
 }
@@ -225,55 +233,28 @@ function redrawPaging(pb) {
 		</h1>
 	</div>
 	<div class="category">
-<!-- 		<table class="category_table"> -->
-		
-<!-- 		</table> -->
 		<ul class="category_list">
-<!-- 			<li> -->
-<!-- 				<a>카테고리 <span class="c_cnt">(20)</span></a> -->
-<!-- 			</li> -->
-<!-- 				<ul> -->
-<!-- 					<li> -->
-<!-- 						<a>Server <span class="c_cnt">(3)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>PHP, Mysql <span class="c_cnt">(9)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>Android <span class="c_cnt">(1)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>IOS <span class="c_cnt">(0)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 				</ul> -->
+			<li>
+				<a>카테고리 <span class="c_cnt">(20)</span></a>
+			</li>
+				<ul>
+					<li>
+						<a>Server <span class="c_cnt">(3)</span></a>
+					</li>						
+					<li>
+						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
+					</li>						
+					<li>
+						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
+					</li>						
+					<li>
+						<a>Android <span class="c_cnt">(1)</span></a>
+					</li>						
+					<li>
+						<a>IOS <span class="c_cnt">(0)</span></a>
+					</li>						
+				</ul>
 		</ul>
-<!-- 		<ul class=""> -->
-<!-- 			<li> -->
-<!-- 				<a>카테고리 <span class="c_cnt">(20)</span></a> -->
-<!-- 			</li> -->
-<!-- 				<ul> -->
-<!-- 					<li> -->
-<!-- 						<a>Server <span class="c_cnt">(3)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>PHP, Mysql <span class="c_cnt">(9)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>Android <span class="c_cnt">(1)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 					<li> -->
-<!-- 						<a>IOS <span class="c_cnt">(0)</span></a> -->
-<!-- 					</li>						 -->
-<!-- 				</ul> -->
-<!-- 		</ul> -->
-	</div>
-	<div class="">
 	</div>
 </div>
 
@@ -287,21 +268,24 @@ function redrawPaging(pb) {
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
-					<select name="searchGbn">
-						<option value="0">제목</option>
-						<option value="1">작성자</option>
-						<option value="2">제목 + 작성자</option>
-					</select>
-					<input type="text" name="searchTxt"/>
-					<input type="button" value="검색" id="searchBtn"/>
+					<div class="search_area">
+						<select name="searchGbn" style="height: 100%;">
+							<option value="0">제목</option>
+							<option value="1">작성자</option>
+							<option value="2">제목 + 작성자</option>
+						</select>
+						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
+						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
+					
 					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn"/>
+						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
+					</div>
 				</form>
 			</div>
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
-					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn"/>
+					${sBmNm}님 어서오세요. <input type="button" value="로그아웃" id="logoutBtn" style="height: 30px; vertical-align: top;"/>
 					<div class="setting">
 						설정
 					</div>
@@ -312,7 +296,7 @@ function redrawPaging(pb) {
 <!-- 					<input type="button" value="회원 정보 수정" id="modifyBtn"> -->
 				</c:when>
 				<c:otherwise>
-					<input type="button" value="로그인" id="loginBtn"/>&nbsp;
+					<input type="button" value="로그인" id="loginBtn"  />&nbsp;
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
@@ -328,24 +312,16 @@ function redrawPaging(pb) {
 		</div>
 	</div>
 	<div class="contents_area">
-<!-- 		<div class="contents_title_area"> -->
-<!-- 			<div class="contents_title"> -->
-<!-- 				안녕하세요 -->
-<!-- 			</div> -->
-<!-- 			<div class="contents_author_area"> -->
-<!-- 				by <span>The Wing</span> &nbsp;작성일<span> 2019-12-18</span> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
 		<div class="table_area">
 			<h1 style="font-size: 14pt;">블로그 리스트</h1>
 			<div class="Blog_list_area">
 			</div>
 			<div class="paging_area">
-				<span>처음</span>
-				<span>이전</span>
+				<span><<</span>
+				<span><</span>
 				<span>1</span>
-				<span>다음</span>
-				<span>마지막</span>
+				<span>></span>
+				<span>>></span>
 			</div>
 		</div>
 	</div>

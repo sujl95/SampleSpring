@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>글쓰기</title>
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
+<link rel="stylesheet" type="text/css" href="resources/css/blog/btn.css" />
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
@@ -81,7 +82,7 @@ $(document).ready(function() {
 				//{키 : 값, 키 : 값,...} -> json
 				success : function(result) {
 					if(result.res=="SUCCESS") {
-						location.href = "Blog_List";
+						location.href = "blog_List";
 					} else {
 						alert("등록에 실패하였습니다");
 					}
@@ -145,9 +146,6 @@ $(document).ready(function() {
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
 				 <form action="#" id="actionForm">
-					<input type="hidden" name="page" id="page" value="1"/>
-					<input type="hidden" name="no" id="no" value="${param.no}"/>
-					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<select name="searchGbn">
 						<option value="0">제목</option>
@@ -185,28 +183,44 @@ $(document).ready(function() {
 	<div class="contents_area">
 		<div class="table_area">
 				<h1 style="font-size: 14pt;">글쓰기</h1>
+				<div class="btn_area">
+					<input class="btn" type="button" id="saveBtn" value="저장"/>
+					<input class="btn" type="button" id="cancelBtn" value="취소"/>
+				</div>
 			<form action="#" id="saveForm" method="post">
 				<input type="hidden" name="bm_no" value="${sBmNo}"/>
-				<table border="1" cellspacing="0">
+				<table border="1" cellspacing="0" class="write_table">
 					<tbody>
 						<tr>
+							<th>카테고리</th>
+							<td>
+								<select name="category_select" style="width : 100%;">
+									<option selected="selected">카테고리</option>
+									<option value="0">카테1</option>
+									<option value="1">카테2</option>
+									<option value="2">카테3</option>
+									<option value="3">카테4</option>
+									<option value="4">카테5</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
 							<th>제목</th>
-							<td><input type="text" name="title" id="title"/></td>
+							<td><input type="text" style="width : 100%;" placeholder="제목" name="title" id="title"/></td>
 						</tr>
 						<tr>
 							<th>작성자</th>
-							<td><input type="text" name="writer" id="writer" readonly="readonly" value="${sBmNm}"/></td>
+							<td><input type="text"class="" style="width : 100%;"name="writer" id="writer" readonly="readonly" value="${sBmNm}"/></td>
 						</tr>
 						<tr>
 							<th>내용</th>
-							<td><textarea name="con" id="con" rows="10" cols="20"></textarea></td>
+							<td><textarea name="con"class=""style="width : 100%;" id="con" rows="10" cols="20"></textarea></td>
 						</tr>
 					</tbody>
 				</table>
 			</form>
 			<br>
-			<input type="button" id="saveBtn" value="저장"/>
-			<input type="button" id="cancelBtn" value="취소"/>
+
 		</div>
 	</div>
 </div>

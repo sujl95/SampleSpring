@@ -39,9 +39,6 @@ $(document).ready(function() {
 		$("#page").val("1");
 		reloadList();
 	});
-	$("#writeBtn").on("click", function() {
-		location.href = "blog_Write";
-	});
 	
 	$("#modifyBtn").on("click",function() {
 		$("#actionForm").attr("action","blog_Modify");
@@ -117,22 +114,22 @@ function reloadcateList(data, ct,cateAllcnt) {
 			}
 			if(typeof data.CT2 != "undefined") {
 				html += "		<li>                                                        ";
-				html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
+				html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
 				html += "		</li>						                                ";				
 			}
 			if(typeof data.CT3 != "undefined") {
 			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+ct[2]+")</span></a> ";
+			html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
 			html += "		</li>						                                ";
 			}
 			if(typeof data.CT4 != "undefined") {
 			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
+			html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
 			html += "		</li>						                                ";
 			}
 			if(typeof data.CT5 != "undefined") {
 			html += "		<li class=\"cate_CT\">                                                        ";
-			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
+			html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
 			html += "		</li>						                                ";				
 			}
 			html += "	</ul>                                                           ";
@@ -148,6 +145,7 @@ function reloadList() {
 		dataType :"json",
 		data : params,
 		success:function(result) {
+			blog_write(result.data);
 			redrawList(result.list);
 			redrawPaging(result.pb);
 			reloadcateList(result.data, result.CT, result.cateAllcnt);
@@ -220,6 +218,24 @@ function redrawPaging(pb) {
 	
 	$(".paging_area").html(html);
 }
+	/* 글쓰기 */
+function blog_write(data) {
+	$("#writeBtn").on("click", function() {
+		if((typeof data.CT1 == "undefined" )&&
+		   (typeof data.CT2 == "undefined" )&&
+		   (typeof data.CT3 == "undefined" )&&
+		   (typeof data.CT4 == "undefined" )&&
+		   (typeof data.CT5 == "undefined" )) {
+			alert("카테고리가 없습니다 카테고리를 1개이상 설정해주세요");
+			$("#actionForm").attr("action","blog_Category");
+			$("#actionForm").submit();
+		}
+		else {
+			location.href = "blog_Write";
+		}			
+	});
+}
+
 </script>
 </head>
 <body>

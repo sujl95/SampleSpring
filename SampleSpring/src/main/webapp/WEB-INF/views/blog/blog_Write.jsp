@@ -225,12 +225,11 @@ $(document).ready(function() {
 							<th>카테고리</th>
 							<td>
 								<select name="category_select" style="width : 100%;">
-									<option selected="selected">카테고리</option>
-									<option value="0">카테1</option>
-									<option value="1">카테2</option>
-									<option value="2">카테3</option>
-									<option value="3">카테4</option>
-									<option value="4">카테5</option>
+									<option value="0">${data.CT1}</option>
+									<option value="1">${data.CT2}</option>
+									<option value="2">${data.CT3}</option>
+									<option value="3">${data.CT4}</option>
+									<option value="4">${data.CT5}</option>
 								</select>
 							</td>
 						</tr>

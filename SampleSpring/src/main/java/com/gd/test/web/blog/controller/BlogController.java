@@ -80,7 +80,6 @@ public class BlogController {
 		ObjectMapper mapper = new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
 		try {
-			//비밀번호 암호화
 			iBlogService.updateCT(params);
 			modelMap.put("res","SUCCESS");
 		} catch(Exception e) {
@@ -98,7 +97,10 @@ public class BlogController {
 	}
 	
 	@RequestMapping(value = "/blog_Write")
-	public ModelAndView bWrite(ModelAndView mav) {
+	public ModelAndView bWrite(@RequestParam HashMap<String,String>params, ModelAndView mav,HttpSession session) throws Throwable {
+		params.put("bm_NO", String.valueOf(session.getAttribute("sBmNo")));
+		HashMap<String,String> data = iBlogService.getBMCT(params);
+		mav.addObject("data", data);
 		mav.setViewName("blog/blog_Write");
 		
 		return mav;

@@ -206,8 +206,26 @@
 	</select>
 	<!-- 게시글 등록 -->
 	<insert id="insertData" parameterType="hashmap">
-		INSERT INTO BLOG_B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO) 
-		VALUES(BLOG_B_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no} ) 
+		INSERT INTO BLOG_B (B_NO , B_TITLE, B_CON,B_DT,B_HIT,DEL_YN,BM_NO ,CT_NAME) 
+		VALUES(BLOG_B_SEQ.NEXTVAL, #{title},#{con},SYSDATE,0,1,#{bm_no},
+        <choose>
+        	<when test="category_select eq 0">
+        		1
+        	</when> 
+        	<when test="category_select eq 1">
+        		2
+        	</when> 
+        	<when test="category_select eq 2">
+        		3
+        	</when> 
+        	<when test="category_select eq 3">
+        		4
+        	</when> 
+        	<when test="category_select eq 4">
+        		5
+        	</when> 
+        </choose>
+        ) 
 	</insert>
 	
 	<!-- 회원 카데고리 가져오기 -->

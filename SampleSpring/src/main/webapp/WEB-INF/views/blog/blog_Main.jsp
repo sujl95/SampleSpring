@@ -54,10 +54,10 @@ $(document).ready(function() {
 		width: "968px",
 		height: "100%"
 	});
-	$(".left_wrap").slimScroll({
-		width: "300px",
-		height: "100%"
-	});
+// 	$(".left_wrap").slimScroll({
+// 		width: "300px",
+// 		height: "100%"
+// 	});
 	$(".setting").on("click",function(e) {
 		if($(".setting_area").css("display") == "none"){ 
 		 $(".setting_area")
@@ -97,6 +97,7 @@ $(document).ready(function() {
 	
 	
 });
+/* 카테고리가져오기 */
 function reloadcateList(data, ct,cateAllcnt) {
 	var html ="";
 	
@@ -135,6 +136,23 @@ function reloadcateList(data, ct,cateAllcnt) {
 			html += "	</ul>                                                           ";
 	}                                                                                  
  	$(".category_list").html(html);
+}
+/* 글쓰기 */
+function blog_write(data) {
+	$("#writeBtn").on("click", function() {
+		if((typeof data.CT1 == "undefined" )&&
+		   (typeof data.CT2 == "undefined" )&&
+		   (typeof data.CT3 == "undefined" )&&
+		   (typeof data.CT4 == "undefined" )&&
+		   (typeof data.CT5 == "undefined" )) {
+			alert("카테고리가 없습니다 카테고리를 1개이상 설정해주세요");
+			$("#actionForm").attr("action","blog_Category");
+			$("#actionForm").submit();
+		}
+		else {
+			location.href = "blog_Write";
+		}			
+	});
 }
 function reloadList() {
 	var params = $("#actionForm").serialize();
@@ -218,23 +236,7 @@ function redrawPaging(pb) {
 	
 	$(".paging_area").html(html);
 }
-	/* 글쓰기 */
-function blog_write(data) {
-	$("#writeBtn").on("click", function() {
-		if((typeof data.CT1 == "undefined" )&&
-		   (typeof data.CT2 == "undefined" )&&
-		   (typeof data.CT3 == "undefined" )&&
-		   (typeof data.CT4 == "undefined" )&&
-		   (typeof data.CT5 == "undefined" )) {
-			alert("카테고리가 없습니다 카테고리를 1개이상 설정해주세요");
-			$("#actionForm").attr("action","blog_Category");
-			$("#actionForm").submit();
-		}
-		else {
-			location.href = "blog_Write";
-		}			
-	});
-}
+
 
 </script>
 </head>

@@ -29,7 +29,7 @@
 		SELECT COUNT(*) AS CNT FROM( 
 		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( 
 		B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 
-		'||TO_CHAR( B.B_DT,'MM')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY B.B_NO DESC) AS 
+		'||TO_CHAR( B.B_DT,'MI')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY B.B_NO DESC) AS 
 		RNUM FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = BM.BM_NO AND BM.DEL_YN = 1 WHERE B.DEL_YN 
 		= 1) B INNER JOIN (SELECT * FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) 
 		AS RNK ,BM_NO,B_NO FROM BLOG_B B WHERE DEL_YN = 1 GROUP BY BM_NO,B_NO) WHERE RNK =1 ) BM ON 
@@ -75,7 +75,7 @@
 	<select id="getB" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT
 		FROM(   SELECT B.B_NO,B.B_TITLE,BM.BM_NM,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
-				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
+				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 '||
 				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
 		                B.B_NO DESC) AS RNUM
 		        FROM BLOG_B B  INNER JOIN BLOG_BM BM 
@@ -103,7 +103,7 @@
 	<select id="getBlog" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO
 		FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
-						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
+						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
 				                B.B_NO DESC) AS RNUM
 		    FROM BLOG_B B INNER JOIN BLOG_BM BM
 		                    ON B.BM_NO = BM.BM_NO
@@ -175,15 +175,63 @@
 	</update>
 	<!-- 상세보기 조회 -->
 	<select id="getData" parameterType="hashmap" resultType="hashmap">
-		 SELECT *
-		 FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
-						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
-						TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
-		       		   BM.BM_NM,b.bm_no,B.B_HIT 
-				FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = bm.bm_no  
-				WHERE B.B_NO = #{no}
-		        ORDER BY B.B_NO
-		      )
+		SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+						B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+						'|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,B.CT_NAME FROM BLOG_B B INNER JOIN 
+						BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO 
+						WHERE B.B_NO = #{no} ORDER BY B.B_NO )
+
+<!-- 		      SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR(  -->
+<!-- 			  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분  -->
+<!-- 			  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT -->
+<!-- 				<choose> -->
+<!-- 					<when test="B.CT_NAME eq 1"> -->
+<!-- 						1 -->
+<!-- 					</when> -->
+<!-- 					<when test="B.CT_NAME eq 2"> -->
+<!-- 						2 -->
+<!-- 					</when> -->
+<!-- 					<when test="B.CT_NAME eq 3"> -->
+<!-- 						3 -->
+<!-- 					</when> -->
+<!-- 					<when test="B.CT_NAME eq 4"> -->
+<!-- 						4 -->
+<!-- 					</when> -->
+<!-- 					<when test="B.CT_NAME eq 5"> -->
+<!-- 						5 -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
+<!-- 				AS CT_NAME -->
+				
+<!-- 			  FROM BLOG_B B INNER JOIN  -->
+<!-- 			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO WHERE B.B_NO = #{no} ORDER BY B.B_NO ) -->
+	</select>
+	<!-- 상세보기 카테고리 조회 -->
+	<select id="getcateData" parameterType="hashmap" resultType="hashmap">
+		      SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+			  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+			  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT
+				<choose>
+					<when test="CT_NAME eq 1">
+						1
+					</when>
+					<when test="CT_NAME eq 2">
+						2
+					</when>
+					<when test="CT_NAME eq 3">
+						3
+					</when>
+					<when test="CT_NAME eq 4">
+						4
+					</when>
+					<when test="CT_NAME eq 5">
+						5
+					</when>
+				</choose>
+				AS CT_NAME
+				
+			  FROM BLOG_B B INNER JOIN 
+			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO WHERE B.B_NO = #{no} ORDER BY B.B_NO )
 	</select>
 	
 	<!-- 회원수정 -->
@@ -274,7 +322,25 @@
 	</select>
 	<!-- 글쓰기 수정 -->
 	<update id="updateData" parameterType="hashmap">
-		UPDATE BLOG_B SET B_TITLE =  #{title} , BM_NO = #{bm_no}, B_CON = #{con}
+		UPDATE BLOG_B SET B_TITLE =  #{title} , B_CON = #{con} , B_DT= SYSDATE, CT_NAME =
+        <choose>
+        	<when test="category_select eq 0">
+        		1
+        	</when> 
+        	<when test="category_select eq 1">
+        		2
+        	</when> 
+        	<when test="category_select eq 2">
+        		3
+        	</when> 
+        	<when test="category_select eq 3">
+        		4
+        	</when> 
+        	<when test="category_select eq 4">
+        		5
+        	</when> 
+        </choose>
+        
 		WHERE B_NO = #{no}
 	</update>
 </mapper>

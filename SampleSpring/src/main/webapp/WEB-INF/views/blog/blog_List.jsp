@@ -12,65 +12,14 @@
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery.slimscroll.js"></script>
+<!-- Main js -->
+<script type="text/javascript" src="resources/script/blog/Main.js"></script>
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
-	$("#logoutBtn").on("click", function() {
-		location.href = "blog_Logout";
-	});
-	$("#loginBtn").on("click", function() {
-		location.href = "blog_Login";
-	});
-	
-	$(".logo_wrap").on("click",function() {
-		location.href = "blog_Main";
-	});
-	
-	$("#joinBtn").on("click", function() {
-		location.href = "blog_Join";
-	});
-	
-	$("#searchBtn").on("click", function() {
-		$("#page").val("1");
-		reloadList();
-	});
-	$("#writeBtn").on("click", function() {
-		location.href = "blog_Write";
-	});
-	
-	$("#modifyBtn").on("click",function() {
-		$("#actionForm").attr("action","blog_Modify");
-		$("#actionForm").submit();
-	});
-	
-	$("#categoryBtn").on("click",function() {
-		$("#actionForm").attr("action","blog_Category");
-		$("#actionForm").submit();
-	});
-	
-	$(".whole_body").slimScroll({
-		width: "968px",
-		height: "100%"
-	});
-	$(".left_wrap").slimScroll({
-		width: "300px",
-		height: "100%"
-	});
-	$(".setting").on("click",function(e) {
-		if($(".setting_area").css("display") == "none"){ 
-		 $(".setting_area")
-	     .addClass("on")
-		 .css({
-	       left: "672px",
-	       top: "37px"
-	     });
-		}
-		 else {
-			 $(".setting_area")
-		     .removeClass("on");
-		 }
-	});
+	Categet();
+	DetailreloadList();
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -136,7 +85,26 @@ $(document).ready(function() {
 	});
 	
 });
-
+function DetailreloadList() {
+	var params = $("#actionForm").serialize();
+	$.ajax({ 
+		type : "post",
+		url : "blogDetailcateAjax",
+		dataType :"json",
+		data : params,
+		success:function(result) {
+			redrawList(result.list);
+			redrawList1(result.data);
+			redrawPaging(result.pb);
+		},
+		error:function(request,status,error) {
+			console.log("status :" + request.status); //상태코드
+			console.log("text :" + request.responceText); //request영역 반환텍스트
+			console.log("error :" + request.error); //에러메세지
+		}
+		
+	});
+}
 function replyshow(obj){
 	var html ="";
 		html += "<div class=\"Blog_Comments_textbox_area\">";
@@ -161,7 +129,6 @@ function reloadList() {
 			redrawList(result.list);
 			redrawList1(result.data);
 			redrawPaging(result.pb);
-			reloadcateList(result.data, result.CT, result.cateAllcnt);
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -192,49 +159,11 @@ function reloadDetailList() {
 		
 	});
 }
-function reloadcateList(data, ct,cateAllcnt) {
-	var html ="";
-	
-	if(data.length == 0 ) {
-		html += "<span\">조회된 데이터가 없습니다.</span>";
-	} else {
-			html += "<li>                                                               ";
-			html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
-			html += "</li>                                                              ";
-			html += "	<ul>                                                            ";
-			if(typeof data.CT1 != "undefined") {
-				html += "		<li>                                                        ";
-				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
-				html += "		</li>						                                ";
-			}
-			if(typeof data.CT2 != "undefined") {
-				html += "		<li>                                                        ";
-				html += "			<a>"+data.CT2+"<span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
-				html += "		</li>						                                ";				
-			}
-			if(typeof data.CT3 != "undefined") {
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT3+"<span class=\"c_cnt\">("+ct[2]+")</span></a> ";
-			html += "		</li>						                                ";
-			}
-			if(typeof data.CT4 != "undefined") {
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT4+"<span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
-			html += "		</li>						                                ";
-			}
-			if(typeof data.CT5 != "undefined") {
-			html += "		<li class=\"cate_CT\">                                                        ";
-			html += "			<a>"+data.CT5+"<span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
-			html += "		</li>						                                ";				
-			}
-			html += "	</ul>                                                           ";
-	}                                                                                  
- 	$(".category_list").html(html);
-}
+
 
 function redrawList(list) {
 	var html ="";
-	
+	console.log(list);
 	if(list.length == 0 ) {
 		html += "<tr>";
 		html += "<td colspan=\"2\">조회된 데이터가 없습니다.</td>";
@@ -253,8 +182,6 @@ function redrawList(list) {
 }
 function redrawList1(data) {
 	var html ="";
-	console.log(data);
-	console.log(data.length);
 	
 	if(data.length == 0 ) {
 		html += "<tr>";
@@ -270,7 +197,8 @@ function redrawList1(data) {
 			html += "		<h2>"+ data.B_TITLE +"</h2>";
 			html += "	</div>";
 			html += "	<div class=\"Details_author\">";
-			html += "		 카테고리 | Web / Html </br>" + "작성자 | "+ data.BM_NM + "" + "&nbsp;&nbsp;&nbsp;&nbsp;	작성일 | " + data.B_DT + "";
+			html += "<input type=\"hidden\" name=\"CT_NAME\" id=\"CT_NAME\" value=\""+data.CT_NAME+"\"/>";
+			html += "		 카테고리 : "+data.CT_NAME+" </br>" + "작성자 | "+ data.BM_NM + "" + "&nbsp;&nbsp;&nbsp;&nbsp;	작성일 | " + data.B_DT + "";
 			html += "	</div>";
 			html += "</div>";
 			html += "<div class=\"Detail_contents\">";
@@ -325,23 +253,23 @@ function redrawPaging(pb) {
 	<div class="category">
 		<ul class="category_list">
 			<li>
-				<a>카테고리 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(0)</span></a>
 			</li>
 				<ul>
 					<li>
-						<a>Server <span class="c_cnt">(3)</span></a>
+						<a>카테고리1 <span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
+						<a>카테고리2<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
+						<a>카테고리3<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>Android <span class="c_cnt">(1)</span></a>
+						<a>카테고리4<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>IOS <span class="c_cnt">(0)</span></a>
+						<a>카테고리5<span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
 		</ul>
@@ -353,7 +281,7 @@ function redrawPaging(pb) {
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
-				 <form action="#" id="actionForm">
+				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
@@ -423,34 +351,6 @@ function redrawPaging(pb) {
 				
 			</div>
 			<div class="Blog_Comments_show">
-				<div class="Blog_Comments_box">
-					<div class="Blog_Comments_author">
-						SJ BLOG
-					</div>
-					<div class="Blog_Comments_contents">
-						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
-					</div>
-					<div class="Blog_Comments_date">
-						2020.01.02 16:00
-					</div>
-<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
-					<div class="Blog_Comments_reply" >
-					</div>
-				</div>
-				<div class="Blog_Comments_box">
-					<div class="Blog_Comments_author">
-						SJ BLOG
-					</div>
-					<div class="Blog_Comments_contents">
-						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
-					</div>
-					<div class="Blog_Comments_date">
-						2020.01.02 16:00
-					</div>
-<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
-					<div class="Blog_Comments_reply" >
-					</div>
-				</div>
 				<div class="Blog_Comments_box">
 					<div class="Blog_Comments_author">
 						SJ BLOG

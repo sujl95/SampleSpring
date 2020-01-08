@@ -12,33 +12,16 @@
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery.slimscroll.js"></script>
+<!-- Main js파일 -->
+<script type="text/javascript" src="resources/script/blog/Main.js"></script>
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	Categet();
-	$("#logoutBtn").on("click", function() {
-		location.href = "blog_Logout";
-	});
-	$("#loginBtn").on("click", function() {
-		location.href = "blog_Login";
-	});
-	
-	$(".logo_wrap").on("click",function() {
-		location.href = "blog_Main";
-	});
-	
-	$("#joinBtn").on("click", function() {
-		location.href = "blog_Join";
-	});
-	
 	$("#searchBtn").on("click", function() {
 		$("#page").val("1");
 		reloadList();
 	});
-	$("#writeBtn").on("click", function() {
-		location.href = "blog_Write";
-	});
-	
 	$("#modifyBtn").on("click",function() {
 		$("#actionForm").attr("action","blog_Modify");
 		$("#actionForm").submit();
@@ -49,14 +32,6 @@ $(document).ready(function() {
 		$("#actionForm").submit();
 	});
 	
-	$(".whole_body").slimScroll({
-		width: "968px",
-		height: "100%"
-	});
-	$(".left_wrap").slimScroll({
-		width: "300px",
-		height: "100%"
-	});
 	$(".setting").on("click",function(e) {
 		if($(".setting_area").css("display") == "none"){ 
 		 $(".setting_area")
@@ -225,23 +200,23 @@ function blog_write(data) {
 	<div class="category">
 		<ul class="category_list">
 			<li>
-				<a>카테고리 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(0)</span></a>
 			</li>
 				<ul>
 					<li>
-						<a>Server <span class="c_cnt">(3)</span></a>
+						<a>카테고리1 <span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
+						<a>카테고리2<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
+						<a>카테고리3<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>Android <span class="c_cnt">(1)</span></a>
+						<a>카테고리4<span class="c_cnt">()</span></a>
 					</li>						
 					<li>
-						<a>IOS <span class="c_cnt">(0)</span></a>
+						<a>카테고리5<span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
 		</ul>

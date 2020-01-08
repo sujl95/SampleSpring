@@ -12,70 +12,18 @@
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery.slimscroll.js"></script>
+<!-- Main js파일 -->
+<script type="text/javascript" src="resources/script/blog/Main.js"></script>
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$("#logoutBtn").on("click", function() {
-			location.href = "blog_Logout";
-		});
-		$("#loginBtn").on("click", function() {
-			location.href = "blog_Login";
-		});
-		
-		$(".logo_wrap").on("click",function() {
-			location.href = "blog_Main";
-		});
-		
-		$("#joinBtn").on("click", function() {
-			location.href = "blog_Join";
-		});
-		
-		$("#searchBtn").on("click", function() {
-			$("#page").val("1");
-			reloadList();
-		});
-		$("#writeBtn").on("click", function() {
-			location.href = "blog_Write";
-		});
-		
-		$("#modifyBtn").on("click",function() {
-			$("#actionForm").attr("action","blog_Modify");
-			$("#actionForm").submit();
-		});
-		
-		$("#categoryBtn").on("click",function() {
-			$("#actionForm").attr("action","blog_Category");
-			$("#actionForm").submit();
-		});
-		
-		$(".whole_body").slimScroll({
-			width: "968px",
-			height: "100%"
-		});
-		$(".left_wrap").slimScroll({
-			width: "300px",
-			height: "100%"
-		});
-		$(".setting").on("click",function(e) {
-			if($(".setting_area").css("display") == "none"){ 
-			 $(".setting_area")
-		     .addClass("on")
-			 .css({
-		       left: "672px",
-		       top: "37px"
-		     });
-			}
-			 else {
-				 $(".setting_area")
-			     .removeClass("on");
-			 }
-		});
-		
-		CKEDITOR.replace("con", {
-			resize_enabled : false,
-			language : "ko", 
-			enterMode : "2"
-		});
+$(document).ready(function() {
+	WCateget();
+	
+	CKEDITOR.replace("con", {
+		resize_enabled : false,
+		language : "ko", 
+		enterMode : "2"
+	});
 		
 	$("#updateBtn").on("click", function() {
 		$("#con").val(CKEDITOR.instances['con'].getData());
@@ -93,14 +41,13 @@
 			var params = $("#updateForm").serialize();
 			$.ajax({
 				type : "post",
-				url : "aUpdateAjax",
+				url : "bUpdateAjax",
 				dataType : "json",
 				data : params,
 				success:function(result) {
 					if(result.res=="SUCCESS") {
 						alert("수정되었습니다.");
-						location.href = "aDetails";
-						$("#updateForm").attr("action" , "blog_List")
+						$("#updateForm").attr("action" , "blog_List");
 						$("#updateForm").submit();
 					} else {
 						alert("수정에 실패하였습니다.");
@@ -132,38 +79,37 @@
 		</h1>
 	</div>
 	<div class="category">
-		<ul class="">
+		<ul class="category_list">
 			<li>
-				<a>카테고리 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(0)</span></a>
 			</li>
 				<ul>
 					<li>
-						<a>Server <span class="c_cnt">(3)</span></a>
+						<a>카테고리1 <span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
+						<a>카테고리2<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
+						<a>카테고리3<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>Android <span class="c_cnt">(1)</span></a>
+						<a>카테고리4<span class="c_cnt">()</span></a>
 					</li>						
 					<li>
-						<a>IOS <span class="c_cnt">(0)</span></a>
+						<a>카테고리5<span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
 		</ul>
 	</div>
-	<div class="">
-	</div>
 </div>
+
 <div class="whole_body">
 	<div class="wrap">
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
-				 <form action="#" id="actionForm">
+				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
@@ -214,21 +160,21 @@
 					<input class="btn" type="button" id="updateBtn" value="수정"/>
 					<input class="btn" type="button" id="cancelBtn" value="취소"/>
 				</div>
-			<form action="#" id="saveForm" method="post">
-				<input type="hidden" name="bm_no" value="${sBmNo}"/>
+			<form action="#" id="updateForm" method="post">
 				<table border="1" cellspacing="0" class="write_table">
 					<tbody>
 						<tr>
 							<th>카테고리</th>
 							<td>
-								<select name="category_select" style="width : 100%;">
-									<option selected="selected">카테고리</option>
-									<option value="0">카테1</option>
-									<option value="1">카테2</option>
-									<option value="2">카테3</option>
-									<option value="3">카테4</option>
-									<option value="4">카테5</option>
-								</select>
+								<div class="category_get">
+									<select name="category_select" style="width : 100%;">
+										<option value="0">${data.CT1}</option>
+										<option value="1">${data.CT2}</option>
+										<option value="2">${data.CT3}</option>
+										<option value="3">${data.CT4}</option>
+										<option value="4">${data.CT5}</option>
+									</select>
+								</div>
 							</td>
 						</tr>
 						<tr>
@@ -245,18 +191,20 @@
 						</tr>
 					</tbody>
 				</table>
-			</form>
+					<input type="hidden" name="page" value="${param.page}"/>
+					<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
+					<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
+					<input type="hidden" name="no" value="${data.B_NO}"/>
+					<input type="hidden" name="bmno" value="${sBmNo}"/>
+					<input type="hidden" name="Details_no" value="${data.B_NO}"/>
+					<input type="hidden" name="Details_bm_no" value="${data.BM_NO}"/>
+				</form>
 			<br>
 
 		</div>
 	</div>
 </div>
-<form action="#" id="updateForm" method="post">
-	<input type="hidden" name="page" value="${param.page}"/>
-	<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
-	<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
-	<input type="hidden" name="no" value="${data.B_NO}"/>
-	<input type="hidden" name="bm_no" value="${sBmNo}"/>
-</form>
+
+
 </body>
 </html>

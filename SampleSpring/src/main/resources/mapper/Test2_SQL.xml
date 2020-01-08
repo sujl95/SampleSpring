@@ -88,7 +88,7 @@
 	</update>
 	<select id="getData" parameterType="hashmap" resultType="hashmap">
 		  SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
-				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MM')||'분 '||
+				||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 '||
 				TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, 
        		   BM.BM_NM,b.bm_no,B.B_HIT
 		FROM B B INNER JOIN BM BM ON B.BM_NO = bm.bm_no  

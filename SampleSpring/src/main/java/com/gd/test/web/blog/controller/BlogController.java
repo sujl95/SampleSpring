@@ -350,7 +350,7 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
-		System.out.println("params = " +params);
+//		System.out.println("params = " +params);
 		iBlogService.updateHit(params);
 		HashMap<String,String> data = iBlogService.getData(params);
 		modelMap.put("data", data);
@@ -370,7 +370,7 @@ public class BlogController {
 	public String blogDetailAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
-		System.out.println("param =" +params);
+//		System.out.println("param =" +params);
 		
 		int cnt = iBlogService.getBlogCnt(params);
 		
@@ -380,12 +380,37 @@ public class BlogController {
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
-		System.out.println("blogDetailAjax=params = "+ params);
+//		System.out.println("blogDetailAjax=params = "+ params);
 		iBlogService.updateHit(params);
 		HashMap<String,String> data = iBlogService.getData(params);
 		modelMap.put("data", data);
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
+		return mapper.writeValueAsString(modelMap);
+	}
+//	상세보기카테고리가져오기
+	@RequestMapping(value = "/blogDetailcateAjax",
+			method = RequestMethod.POST,
+			produces = "test/json;charset=UTF-8")
+	@ResponseBody 
+	public String blogDetailcateAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
+		ObjectMapper mapper= new ObjectMapper();
+		Map<String,Object> modelMap = new HashMap<String,Object>();
+		System.out.println("DetailcateAjax param =" +params);
+		HashMap<String,String> data = iBlogService.getcateData(params);
+		modelMap.put("data", data);
+		
+//		int cnt = iBlogService.getBlogCnt(params);
+//		
+//		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
+//		
+//		params.put("startCnt" , Integer.toString(pb.getStartCount()));
+//		params.put("endCnt" , Integer.toString(pb.getEndCount()));
+//		
+//		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
+//		System.out.println("blogDetailcateAjax=params = "+ params);
+//		modelMap.put("list",list);
+//		modelMap.put("pb",pb);
 		return mapper.writeValueAsString(modelMap);
 	}
 	

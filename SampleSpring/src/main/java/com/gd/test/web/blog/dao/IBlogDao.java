@@ -49,6 +49,8 @@ public interface IBlogDao {
 
 	void updateData(HashMap<String, String> params) throws Throwable;
 
+	HashMap<String, String> getcateData(HashMap<String, String> params) throws Throwable;
+
 
 
 

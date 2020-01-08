@@ -10,68 +10,23 @@
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <!-- btn -->
 <link rel="stylesheet" type="text/css" href="resources/css/blog/btn.css" />
-<!-- Main js -->
-<script type="text/javascript" src=>"resources/script/blog/Main.js"</script>
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
 <!-- 슬림 스크롤 js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery.slimscroll.js"></script>
+<!-- Main js -->
+<script type="text/javascript" src="resources/script/blog/Main.js"></script>
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
-	$("#logoutBtn").on("click", function() {
-		location.href = "blog_Logout";
-	});
-	$("#loginBtn").on("click", function() {
-		location.href = "blog_Login";
-	});
-	
-	$(".logo_wrap").on("click",function() {
-		location.href = "blog_Main";
-	});
-	
-	$("#joinBtn").on("click", function() {
-		location.href = "blog_Join";
-	});
+	Categet();
 	
 	$("#searchBtn").on("click", function() {
 		$("#page").val("1");
 		reloadList();
 	});
 	
-	$("#modifyBtn").on("click",function() {
-		$("#actionForm").attr("action","blog_Modify");
-		$("#actionForm").submit();
-	});
-	
-	$("#categoryBtn").on("click",function() {
-		$("#actionForm").attr("action","blog_Category");
-		$("#actionForm").submit();
-	});
-	
-	$(".whole_body").slimScroll({
-		width: "968px",
-		height: "100%"
-	});
-// 	$(".left_wrap").slimScroll({
-// 		width: "300px",
-// 		height: "100%"
-// 	});
-	$(".setting").on("click",function(e) {
-		if($(".setting_area").css("display") == "none"){ 
-		 $(".setting_area")
-	     .addClass("on")
-		 .css({
-	       left: "672px",
-	       top: "37px"
-	     });
-		}
-		 else {
-			 $(".setting_area")
-		     .removeClass("on");
-		 }
-	});
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -93,67 +48,8 @@ $(document).ready(function() {
 		$("#actionForm").submit();
 	});
 	
-	
-	
-	
 });
-/* 카테고리가져오기 */
-function reloadcateList(data, ct,cateAllcnt) {
-	var html ="";
-	
-	if(data.length == 0 ) {
-		html += "<span\">조회된 데이터가 없습니다.</span>";
-	} else {
-			html += "<li>                                                               ";
-			html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
-			html += "</li>                                                              ";
-			html += "	<ul>                                                            ";
-			if(typeof data.CT1 != "undefined") {
-				html += "		<li>                                                        ";
-				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
-				html += "		</li>						                                ";
-			}
-			if(typeof data.CT2 != "undefined") {
-				html += "		<li>                                                        ";
-				html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
-				html += "		</li>						                                ";				
-			}
-			if(typeof data.CT3 != "undefined") {
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
-			html += "		</li>						                                ";
-			}
-			if(typeof data.CT4 != "undefined") {
-			html += "		<li>                                                        ";
-			html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
-			html += "		</li>						                                ";
-			}
-			if(typeof data.CT5 != "undefined") {
-			html += "		<li class=\"cate_CT\">                                                        ";
-			html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
-			html += "		</li>						                                ";				
-			}
-			html += "	</ul>                                                           ";
-	}                                                                                  
- 	$(".category_list").html(html);
-}
-/* 글쓰기 */
-function blog_write(data) {
-	$("#writeBtn").on("click", function() {
-		if((typeof data.CT1 == "undefined" )&&
-		   (typeof data.CT2 == "undefined" )&&
-		   (typeof data.CT3 == "undefined" )&&
-		   (typeof data.CT4 == "undefined" )&&
-		   (typeof data.CT5 == "undefined" )) {
-			alert("카테고리가 없습니다 카테고리를 1개이상 설정해주세요");
-			$("#actionForm").attr("action","blog_Category");
-			$("#actionForm").submit();
-		}
-		else {
-			location.href = "blog_Write";
-		}			
-	});
-}
+
 function reloadList() {
 	var params = $("#actionForm").serialize();
 	console.log(params);
@@ -163,10 +59,8 @@ function reloadList() {
 		dataType :"json",
 		data : params,
 		success:function(result) {
-			blog_write(result.data);
 			redrawList(result.list);
 			redrawPaging(result.pb);
-			reloadcateList(result.data, result.CT, result.cateAllcnt);
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -250,35 +144,34 @@ function redrawPaging(pb) {
 	<div class="category">
 		<ul class="category_list">
 			<li>
-				<a>카테고리 <span class="c_cnt">(20)</span></a>
+				<a>카테고리 <span class="c_cnt">(0)</span></a>
 			</li>
 				<ul>
 					<li>
-						<a>Server <span class="c_cnt">(3)</span></a>
+						<a>카테고리1 <span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>PHP, Mysql <span class="c_cnt">(9)</span></a>
+						<a>카테고리2<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>HTML, CSS, Script <span class="c_cnt">(7)</span></a>
+						<a>카테고리3<span class="c_cnt">(0)</span></a>
 					</li>						
 					<li>
-						<a>Android <span class="c_cnt">(1)</span></a>
+						<a>카테고리4<span class="c_cnt">()</span></a>
 					</li>						
 					<li>
-						<a>IOS <span class="c_cnt">(0)</span></a>
+						<a>카테고리5<span class="c_cnt">(0)</span></a>
 					</li>						
 				</ul>
 		</ul>
 	</div>
 </div>
-
 <div class="whole_body">
 	<div class="wrap">
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
-				 <form action="#" id="actionForm">
+				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>

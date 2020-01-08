@@ -122,5 +122,10 @@ public class BlogDao implements IBlogDao{
 	public void updateData(HashMap<String, String> params) throws Throwable {
 		sqlSession.update("blog.updateData",params);
 	}
+
+	@Override
+	public HashMap<String, String> getcateData(HashMap<String, String> params) throws Throwable {
+		return sqlSession.selectOne("blog.getcateData",params);
+	}
 	
 }

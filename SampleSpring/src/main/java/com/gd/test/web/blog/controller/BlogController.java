@@ -115,7 +115,6 @@ public class BlogController {
 			int[] catecnt = {0,0,0,0,0};
 			for(int i = 0 ; i < 5; i++) {
 				params.put("CT", (i+1)+"");
-				System.out.println("params = " +params);
 				catecnt[i] = iBlogService.getCTCnt(params);
 			}
 			modelMap.put("CT", catecnt);
@@ -123,51 +122,8 @@ public class BlogController {
 		
 		return mapper.writeValueAsString(modelMap);
 	}
-//	public void categet(@RequestParam HashMap<String,String>params, ModelAndView mav,HttpSession session) throws Throwable {
-//		ObjectMapper mapper= new ObjectMapper();
-//		Map<String,Object> modelMap = new HashMap<String,Object>();
-////		카테고리가져오기
-//		if (session.getAttribute("sBmNo") != null) {
-//			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
-//			HashMap<String,String> data = iBlogService.getBMCT(params);
-//			System.out.println("data"+data);
-//			modelMap.put("data", data);
-//			int cateAllcnt = 0;
-//			cateAllcnt = iBlogService.getCTAllCnt(params);
-//			modelMap.put("cateAllcnt", cateAllcnt);
-//			int[] catecnt = {0,0,0,0,0};
-//			for(int i = 0 ; i < 5; i++) {
-//				params.put("CT", (i+1)+"");
-//				System.out.println("params = " +params);
-//				catecnt[i] = iBlogService.getCTCnt(params);
-//			}
-//			modelMap.put("CT", catecnt);
-//		}
-//		
-//	}
 	@RequestMapping(value = "/blog_Write")
 	public ModelAndView bWrite(@RequestParam HashMap<String,String>params, ModelAndView mav,HttpSession session) throws Throwable {
-//		categet(params,mav,session);
-//		ObjectMapper mapper= new ObjectMapper();
-//		Map<String,Object> modelMap = new HashMap<String,Object>();
-//		//		카테고리가져오기
-//		if (session.getAttribute("sBmNo") != null) {
-//			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
-//			HashMap<String,String> data = iBlogService.getBMCT(params);
-//			System.out.println("data"+data);
-//			modelMap.put("data", data);
-//			int cateAllcnt = 0;
-//			cateAllcnt = iBlogService.getCTAllCnt(params);
-//			modelMap.put("cateAllcnt", cateAllcnt);
-//			int[] catecnt = {0,0,0,0,0};
-//			for(int i = 0 ; i < 5; i++) {
-//				params.put("CT", (i+1)+"");
-//				System.out.println("params = " +params);
-//				catecnt[i] = iBlogService.getCTCnt(params);
-//			}
-//			modelMap.put("CT", catecnt);
-//		}
-//		
 		mav.setViewName("blog/blog_Write");
 		
 		return mav;
@@ -313,7 +269,6 @@ public class BlogController {
 		if (session.getAttribute("sBmNo") != null) {
 			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 			HashMap<String,String> data = iBlogService.getBMCT(params);
-			System.out.println("data"+data);
 			modelMap.put("data", data);
 			int cateAllcnt = 0;
 			cateAllcnt = iBlogService.getCTAllCnt(params);
@@ -333,6 +288,7 @@ public class BlogController {
 		
 		return mapper.writeValueAsString(modelMap);
 	}
+	
 //	개인블로그리스트
 	@RequestMapping(value = "/blogListAjax",
 			method = RequestMethod.POST,
@@ -351,13 +307,20 @@ public class BlogController {
 		params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
 //		System.out.println("params = " +params);
-		iBlogService.updateHit(params);
-		HashMap<String,String> data = iBlogService.getData(params);
+		int catedata = iBlogService.geticateData(params);
+		System.out.println(catedata);
+//		HashMap<String,String> data = iBlogService.getData(params);
+		for ( int i = 1; i <6; i++) {
+			if (catedata == i) {
+				params.put("catedata",Integer.toString(catedata));
+			}
+		}
+		System.out.println("params" +params);
+//		iBlogService.updateHit(params);
+		HashMap<String,String> data = iBlogService.getcateData(params);
 		modelMap.put("data", data);
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
-		
-		
 		
 		return mapper.writeValueAsString(modelMap);
 	}
@@ -370,6 +333,7 @@ public class BlogController {
 	public String blogDetailAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
 		ObjectMapper mapper= new ObjectMapper();
 		Map<String,Object> modelMap = new HashMap<String,Object>();
+		iBlogService.updateHit(params);
 //		System.out.println("param =" +params);
 		
 		int cnt = iBlogService.getBlogCnt(params);
@@ -381,36 +345,20 @@ public class BlogController {
 		
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
 //		System.out.println("blogDetailAjax=params = "+ params);
-		iBlogService.updateHit(params);
-		HashMap<String,String> data = iBlogService.getData(params);
+		int catedata = iBlogService.geticateData(params);
+		System.out.println(catedata);
+//		HashMap<String,String> data = iBlogService.getData(params);
+		for ( int i = 1; i <6; i++) {
+			if (catedata == i) {
+				params.put("catedata",Integer.toString(catedata));
+			}
+		}
+		System.out.println("params" +params);
+		HashMap<String,String> data = iBlogService.getcateData(params);
+		System.out.println("data" +data);
 		modelMap.put("data", data);
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
-		return mapper.writeValueAsString(modelMap);
-	}
-//	상세보기카테고리가져오기
-	@RequestMapping(value = "/blogDetailcateAjax",
-			method = RequestMethod.POST,
-			produces = "test/json;charset=UTF-8")
-	@ResponseBody 
-	public String blogDetailcateAjax(@RequestParam HashMap<String, String>params, ModelAndView modelAndView) throws Throwable{
-		ObjectMapper mapper= new ObjectMapper();
-		Map<String,Object> modelMap = new HashMap<String,Object>();
-		System.out.println("DetailcateAjax param =" +params);
-		HashMap<String,String> data = iBlogService.getcateData(params);
-		modelMap.put("data", data);
-		
-//		int cnt = iBlogService.getBlogCnt(params);
-//		
-//		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
-//		
-//		params.put("startCnt" , Integer.toString(pb.getStartCount()));
-//		params.put("endCnt" , Integer.toString(pb.getEndCount()));
-//		
-//		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
-//		System.out.println("blogDetailcateAjax=params = "+ params);
-//		modelMap.put("list",list);
-//		modelMap.put("pb",pb);
 		return mapper.writeValueAsString(modelMap);
 	}
 	

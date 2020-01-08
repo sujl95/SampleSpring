@@ -51,6 +51,8 @@ public interface IBlogService {
 
 	HashMap<String, String> getcateData(HashMap<String, String> params) throws Throwable;
 
+	int geticateData(HashMap<String, String> params) throws Throwable;
+
 
 
 }

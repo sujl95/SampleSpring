@@ -19,7 +19,6 @@
 $(document).ready(function() {
 	reloadList();
 	Categet();
-	DetailreloadList();
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -85,26 +84,6 @@ $(document).ready(function() {
 	});
 	
 });
-function DetailreloadList() {
-	var params = $("#actionForm").serialize();
-	$.ajax({ 
-		type : "post",
-		url : "blogDetailcateAjax",
-		dataType :"json",
-		data : params,
-		success:function(result) {
-			redrawList(result.list);
-			redrawList1(result.data);
-			redrawPaging(result.pb);
-		},
-		error:function(request,status,error) {
-			console.log("status :" + request.status); //상태코드
-			console.log("text :" + request.responceText); //request영역 반환텍스트
-			console.log("error :" + request.error); //에러메세지
-		}
-		
-	});
-}
 function replyshow(obj){
 	var html ="";
 		html += "<div class=\"Blog_Comments_textbox_area\">";

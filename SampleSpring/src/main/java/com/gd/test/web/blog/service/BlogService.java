@@ -130,6 +130,11 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getcateData(params);
 	}
 
+	@Override
+	public int geticateData(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.geticateData(params);
+	}
+
 
 		
 

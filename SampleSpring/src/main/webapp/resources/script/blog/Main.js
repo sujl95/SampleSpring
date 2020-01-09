@@ -102,47 +102,50 @@ function Categet() {
 function reloadcateList(data, ct,cateAllcnt) {
 	var html ="";
 	var html1 ="";
-	if(data.length == 0 ) {
+	
+	if(typeof data == "undefined") {
 		html += "<span\">조회된 데이터가 없습니다.</span>";
 	} else {
-		html += "<li>                                                               ";
-		html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
+//		html += " <form action=\"#\" id=\"cateForm\" method=\"post\">";
+		html += "		<li name=\"category_num\" id=\"category_num\" value=\"0\">                                                        ";
+		html += "<a>전체 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
 		html += "</li>                                                              ";
-		html += "	<ul>                                                            ";
+		html += "	<ul class=\"category_list_area\">                                                            ";
 		html1 +="<select name=\"category_select\"; style=\"width : 100%;\">";
 		if(typeof data.CT1 != "undefined") {
-			html += "		<li>                                                        ";
+			html += "		<li name=\"category_num\" id=\"category_num\" value=\"1\">                                                        ";
 			html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"0\">"+data.CT1+"</option>            ";
 		}
 		if(typeof data.CT2 != "undefined") {
-			html += "		<li>                                                        ";
+			html += "		<li name=\"category_num\" id=\"category_num\" value=\"2\">                                                        ";
 			html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
 			html += "		</li>						                                ";
 			
 			html1 +="	<option value=\"1\">"+data.CT2+"</option>            ";
 		}
 		if(typeof data.CT3 != "undefined") {
-			html += "		<li>                                                        ";
+			html += "		<li name=\"category_num\" id=\"category_num\" value=\"3\">                                                        ";
 			html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
 			html += "		</li>						                                ";
 			
 			html1 +="	<option value=\"2\">"+data.CT3+"</option>            ";
 		}
 		if(typeof data.CT4 != "undefined") {
-			html += "		<li>                                                        ";
+			html += "		<li name=\"category_num\" id=\"category_num\" value=\"4\">                                                        ";
 			html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"3\">"+data.CT4+"</option>            ";
 		}
 		if(typeof data.CT5 != "undefined") {
-			html += "		<li class=\"cate_CT\">                                                        ";
+			html += "		<li name=\"category_num\" id=\"category_num\" value=\"5\">                                                        ";
 			html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"4\">"+data.CT5+"</option>            ";
 		}
 		html += "	</ul>                                                           ";
+//		html += "</form>";
 		html1 +="</select>                                            ";
 	}                                                                                  
 	$(".category_list").html(html);
@@ -151,39 +154,41 @@ function reloadcateList(data, ct,cateAllcnt) {
 /* 카테고리가져오기 */
 function reloadcate(data, ct,cateAllcnt) {
 	var html ="";
-	if(data.length == 0 ) {
+	if(typeof data == "undefined") {
 		html += "<span\">조회된 데이터가 없습니다.</span>";
 	} else {
-			html += "<li>                                                               ";
-			html += "<a>카테고리 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
+//			html += " <form action=\"#\" id=\"cateForm\" method=\"post\">";
+		html += "		<li name=\"category_num\" id=\"category_num\" value=\"0\">                                                        ";
+			html += "<a>전체 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
 			html += "</li>                                                              ";
-			html += "	<ul>                                                            ";
+			html += "	<ul class=\"category_list_area\">                                                            ";
 			if(typeof data.CT1 != "undefined") {
-				html += "		<li>                                                        ";
+				html += "		<li name=\"category_num\" id=\"category_num\" value=\"1\">                                                        ";
 				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT2 != "undefined") {
-				html += "		<li>                                                        ";
+				html += "		<li name=\"category_num\" id=\"category_num\" value=\"2\">                                                        ";
 				html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT3 != "undefined") {
-				html += "		<li>                                                        ";
+				html += "		<li name=\"category_num\" id=\"category_num\" value=\"3\">                                                        ";
 				html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT4 != "undefined") {
-				html += "		<li>                                                        ";
+				html += "		<li name=\"category_num\" id=\"category_num\" value=\"4\">                                                        ";
 				html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT5 != "undefined") {
-				html += "		<li class=\"cate_CT\">                                                        ";
+				html += "		<li name=\"category_num\" id=\"category_num\" value=\"5\">                                                        ";
 				html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
 				html += "		</li>						                                ";
 			}
 			html += "	</ul>                                                           ";
+//			html += "</form>";
 	}                                                                                  
  	$(".category_list").html(html);
 }

@@ -20,7 +20,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
-	Categet();
+// 	Categet();
 	
 	$("#searchBtn").on("click", function() {
 		$("#page").val("1");
@@ -143,26 +143,7 @@ function redrawPaging(pb) {
 	</div>
 	<div class="category">
 		<ul class="category_list">
-			<li>
-				<a>카테고리 <span class="c_cnt">(0)</span></a>
-			</li>
-				<ul>
-					<li>
-						<a>카테고리1 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리2<span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리3<span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리4<span class="c_cnt">()</span></a>
-					</li>						
-					<li>
-						<a>카테고리5<span class="c_cnt">(0)</span></a>
-					</li>						
-				</ul>
+			
 		</ul>
 	</div>
 </div>
@@ -174,8 +155,9 @@ function redrawPaging(pb) {
 				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
-					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="bmno" id="bmno" value="1"/>
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
+					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
 							<option value="0">제목</option>

@@ -83,6 +83,13 @@ $(document).ready(function() {
 		}
 	});
 	
+	/* 카테고리 리스트 조회 */
+	$(".category_list").on("click", "li", function(){
+		$("#cate_no").val($(this).val());
+		console.log($("#cate_no").val());
+		reloadList();
+		reloadDetailList();
+	});
 });
 function replyshow(obj){
 	var html ="";
@@ -161,11 +168,23 @@ function redrawList(list) {
 }
 function redrawList1(data) {
 	var html ="";
-	
-	if(data.length == 0 ) {
-		html += "<tr>";
-		html += "<td colspan=\"2\">조회된 데이터가 없습니다.</td>";
-		html += "</tr>";
+	if(data == null ) {
+		html += "<div name=\"" + "\">";
+		html += "" + "<br/>";
+		html += "" + "<br/>";
+		html += "" + "<br/>";
+		html += "<div class=\"Details_header\" name=\"" + "\">";
+		html += "	<div class=\"Details_title\">";
+		html += "		<h2>"+"</h2>";
+		html += "	</div>";
+		html += "	<div class=\"Details_author\">";
+		html += "<input type=\"hidden\" name=\"CT_NAME\" id=\"CT_NAME\" value=\""+"\"/>";
+		html += "		 카테고리 : "+" </br>" + "작성자 | " + "" + "&nbsp;&nbsp;&nbsp;&nbsp;	작성일 | " + "";
+		html += "	</div>";
+		html += "</div>";
+		html += "<div class=\"Detail_contents\">";
+		html += ""+  "조회된 글이 없습니다" + "";
+		html += "</div>";
 	} else {
 			html += "<div name=\"" + data.B_NO + "\">";
 			html += "" + data.B_TITLE +"<br/>";
@@ -264,6 +283,7 @@ function redrawPaging(pb) {
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
 							<option value="0">제목</option>
@@ -306,13 +326,13 @@ function redrawPaging(pb) {
 		</div>
 	</div>
 	<div class="Blog_Details_area">
-		<form action="#" method="post" id="actionForm">
+<!-- 		<form action="#" method="post" id="actionForm"> -->
 			<input type="hidden" name="page" value="${param.page}"/>
 			<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
 			<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
 			<input type="hidden" name="Details_no" value="${data.B_NO}"/>
 			<input type="hidden" name="Details_bm_no" value="${data.BM_NO}"/>
-		</form>
+<!-- 		</form> -->
 		<div class="Blog_Details">
 			<div class="Details_header">
 				<div class="Details_title">

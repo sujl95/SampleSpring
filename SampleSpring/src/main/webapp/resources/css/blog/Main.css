@@ -57,7 +57,7 @@ html , body {
 .category_table {
 	padding : 30px;
 }
-.category > ul > li > a:hover , .category > ul > ul > li > a:hover {
+.category > ul  > li > a:hover , .category > ul  > ul > li > a:hover {
 	color : #77bbff;
 	cursor : pointer;
 }

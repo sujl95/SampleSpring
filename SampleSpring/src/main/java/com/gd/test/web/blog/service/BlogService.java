@@ -135,6 +135,21 @@ public class BlogService implements IBlogService {
 		return iBlogDao.geticateData(params);
 	}
 
+	@Override
+	public HashMap<String, String> getBMWCT(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getBMWCT(params);
+	}
+
+	@Override
+	public int getCTWAllCnt(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getCTWAllCnt(params);
+	}
+
+	@Override
+	public int getCTWCnt(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getCTWCnt(params);
+	}
+
 
 
 		

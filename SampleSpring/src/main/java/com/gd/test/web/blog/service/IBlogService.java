@@ -53,6 +53,12 @@ public interface IBlogService {
 
 	int geticateData(HashMap<String, String> params) throws Throwable;
 
+	HashMap<String, String> getBMWCT(HashMap<String, String> params) throws Throwable;
+
+	int getCTWAllCnt(HashMap<String, String> params) throws Throwable;
+
+	int getCTWCnt(HashMap<String, String> params) throws Throwable;
+
 
 
 

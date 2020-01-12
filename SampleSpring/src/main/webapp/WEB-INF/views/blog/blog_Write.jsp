@@ -105,7 +105,7 @@ function Categet() {
 	console.log(params);
 	$.ajax({ 
 		type : "post",
-		url : "bCategetAjax",
+		url : "bWCategetAjax",
 		dataType :"json",
 		data : params,
 		success:function(result) {

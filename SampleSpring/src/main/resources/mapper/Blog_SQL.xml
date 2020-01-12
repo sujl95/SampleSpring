@@ -210,6 +210,12 @@
 						WHERE RNK = 1
 		  </if>
 	</select>
+	<!-- 회원 카데고리 글쓰기 수정가져오기 -->
+	<select id="getBMWCT" parameterType="hashmap" resultType="hashmap">
+		SELECT CT.* , BM.BM_NM
+		FROM BLOG_CT CT INNER JOIN BLOG_BM BM ON BM.BM_NO = CT.BM_NO 
+		WHERE BM.BM_NO = #{bm_NO}
+	</select>
 	<!-- 회원 카데고리 가져오기 -->
 	<select id="getBMCT" parameterType="hashmap" resultType="hashmap">
 		SELECT CT.* , BM.BM_NM
@@ -221,6 +227,33 @@
 		UPDATE BLOG_CT SET CT1=#{categoryTxt1},CT2=#{categoryTxt2},CT3=#{categoryTxt3},CT4=#{categoryTxt4},CT5=#{categoryTxt5}
 		WHERE BM_NO= #{bmno}
 	</update>
+	<!-- 카테고리 카운트 가져오기 -->
+	<select id="getCTWCnt" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(CT_NAME) AS CNT
+		FROM BLOG_B B INNER JOIN BLOG_CT CT ON B.BM_NO = CT.BM_NO
+		WHERE 1=1 
+		AND DEL_YN = 1
+		AND B.BM_NO = #{bm_NO}
+		AND B.CT_NAME = 
+			<choose>
+				<when test="CT eq 5">
+				'5'
+				</when>
+				<when test="CT eq 4">
+				'4'
+				</when>
+				<when test="CT eq 3">
+				'3'
+				</when>
+				<when test="CT eq 2">
+				'2'
+				</when>
+				<when test="CT eq 1">
+				'1'
+				</when>
+			</choose>
+	</select>
+	<!-- 카테고리 카운트 가져오기 -->
 	<select id="getCTCnt" parameterType="hashmap" resultType="Integer">
 		SELECT COUNT(CT_NAME) AS CNT
 		FROM BLOG_B B INNER JOIN BLOG_CT CT ON B.BM_NO = CT.BM_NO
@@ -245,6 +278,14 @@
 				'1'
 				</when>
 			</choose>
+	</select>
+	<!-- 카테고리(글) 총값 -->
+	<select id="getCTWAllCnt" parameterType="hashmap" resultType="Integer">
+		SELECT COUNT(CT_NAME) AS CNT
+		FROM BLOG_B B INNER JOIN BLOG_CT CT ON B.BM_NO = CT.BM_NO
+		WHERE 1=1 
+		AND DEL_YN = 1
+		AND B.BM_NO = #{bm_NO}
 	</select>
 	<!-- 카테고리 총값 -->
 	<select id="getCTAllCnt" parameterType="hashmap" resultType="Integer">

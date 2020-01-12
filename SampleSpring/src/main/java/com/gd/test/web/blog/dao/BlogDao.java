@@ -132,5 +132,20 @@ public class BlogDao implements IBlogDao{
 	public int geticateData(HashMap<String, String> params) throws Throwable {
 		return sqlSession.selectOne("blog.geticateData",params);
 	}
+
+	@Override
+	public HashMap<String, String> getBMWCT(HashMap<String, String> params) throws Throwable {
+		return  sqlSession.selectOne("blog.getBMWCT",params);
+	}
+
+	@Override
+	public int getCTWAllCnt(HashMap<String, String> params) throws Throwable {
+		return sqlSession.selectOne("blog.getCTWAllCnt",params);
+	}
+
+	@Override
+	public int getCTWCnt(HashMap<String, String> params) throws Throwable {
+		return sqlSession.selectOne("blog.getCTWCnt",params);
+	}
 	
 }

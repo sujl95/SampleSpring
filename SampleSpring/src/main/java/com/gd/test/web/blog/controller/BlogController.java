@@ -94,7 +94,31 @@ public class BlogController {
 		mav.setViewName("blog/blog_Search");
 		return mav;
 	}
-	
+//	카테고리 가져오기
+	@RequestMapping(value = "/bWCategetAjax",
+			method = RequestMethod.POST,
+			produces = "test/json;charset=UTF-8")
+	@ResponseBody 
+	public String bWCategetAjax(@RequestParam HashMap<String, String>params,HttpSession session, ModelAndView modelAndView) throws Throwable{
+		ObjectMapper mapper= new ObjectMapper();
+		Map<String,Object> modelMap = new HashMap<String,Object>();
+		
+//		카테고리가져오기
+			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
+			HashMap<String,String> data = iBlogService.getBMWCT(params);
+			modelMap.put("data", data);
+			int cateAllcnt = 0;
+			cateAllcnt = iBlogService.getCTWAllCnt(params);
+			modelMap.put("cateAllcnt", cateAllcnt);
+			int[] catecnt = {0,0,0,0,0};
+			for(int i = 0 ; i < 5; i++) {
+				params.put("CT", (i+1)+"");
+				catecnt[i] = iBlogService.getCTWCnt(params);
+			}
+			modelMap.put("CT", catecnt);
+		
+		return mapper.writeValueAsString(modelMap);
+	}
 //	카테고리(list) 가져오기 blogcateListAjax
 	
 //	카테고리 가져오기

@@ -57,7 +57,7 @@
 		                AND BM.DEL_YN = 1
 		WHERE B.DEL_YN = 1
 		AND BM.BM_NO = #{bmno}
-		<if test="cate_no != ''">
+		<if test="cate_no == '' and cate_no == 0">
 			 AND CT_NAME = #{cate_no}
 		</if>
 		<if test="searchTxt != null and searchTxt != ''">
@@ -131,7 +131,8 @@
 		                        AND BM.DEL_YN = 1
 		        WHERE B.DEL_YN = 1
 		      	AND B.BM_NO =  #{bmno}
-		      	<if test="cate_no != ''">
+		      	
+		      	<if test="cate_no != '' and cate_no != 0">
 					 AND CT_NAME = #{cate_no}
 				</if>
         <if test="searchTxt != null and searchTxt != ''">
@@ -192,7 +193,7 @@
 	</select>
 	<!-- 상세보기 카테고리 조회 -->
 	<select id="getcateData" parameterType="hashmap" resultType="hashmap">
-	      <if test="cate_no == ''">
+	      <if test="cate_no == '' or cate_no == 0">
 		      SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
 			  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
 			  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
@@ -200,7 +201,7 @@
 			  FROM BLOG_B B INNER JOIN 
 			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO WHERE B.B_NO = #{no} ORDER BY B.B_NO )
 	      </if>
-		  <if test="cate_no != ''">
+		  <if test="cate_no != '' and cate_no != 0">
 			  SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
 						      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
 						      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}

@@ -17,7 +17,7 @@
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-	WCateget();
+	Categet();
 	
 	CKEDITOR.replace("con", {
 		resize_enabled : false,
@@ -69,6 +69,27 @@ $(document).ready(function() {
 		history.back();
 	});
 });
+function Categet() {
+	var params = $("#actionForm").serialize();
+	console.log(params);
+	$.ajax({ 
+		type : "post",
+		url : "bWCategetAjax",
+		dataType :"json",
+		data : params,
+		success:function(result) {
+			blog_write(result.data);
+			reloadcateList(result.data, result.CT, result.cateAllcnt);
+			console.log(result.data);
+		},
+		error:function(request,status,error) {
+			console.log("status :" + request.status); //상태코드
+			console.log("text :" + request.responceText); //request영역 반환텍스트
+			console.log("error :" + request.error); //에러메세지
+		}
+		
+	});
+}
 </script>
 </head>
 <body>

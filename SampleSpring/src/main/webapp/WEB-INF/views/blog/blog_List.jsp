@@ -86,7 +86,7 @@ $(document).ready(function() {
 	/* 카테고리 리스트 조회 */
 	$(".category_list").on("click", "li", function(){
 		$("#cate_no").val($(this).val());
-		console.log($("#cate_no").val());
+// 		console.log($("#cate_no").val());
 		reloadList();
 		reloadDetailList();
 	});
@@ -168,6 +168,7 @@ function redrawList(list) {
 }
 function redrawList1(data) {
 	var html ="";
+	var html1 ="";
 	if(data == null ) {
 		html += "<div name=\"" + "\">";
 		html += "" + "<br/>";
@@ -202,8 +203,22 @@ function redrawList1(data) {
 			html += "<div class=\"Detail_contents\">";
 			html += ""+  data.B_CON + "";
 			html += "</div>";
+			console.log($("#cate_no").val());
+			if (($("#cate_no").val() != '')){
+				if (($("#cate_no").val() != 0) || $("#cate_no").val() == '') {
+					html1 +="" +data.CT_NAME+" 카테고리의 다른글";
+				}
+				else {
+					html1 += "전체글" ;
+				}
+			}
+			else {
+				html1 += "전체글" ;
+			}
+			
 	}
 	$(".Blog_Details").html(html);
+	$(".Blog_table_title").html(html1);
 	
 }
 function redrawPaging(pb) {
@@ -410,7 +425,7 @@ function redrawPaging(pb) {
 	</div>
 	<div class="table_area">
 		<div class="Blog_table_list">
-				<h4>'##' 카테고리의 다른글</h4>
+				<h4 class="Blog_table_title">전체글</h4>
 				<hr>
 			<table class="Blog_table">
 				<colgroup>

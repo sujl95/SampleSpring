@@ -17,6 +17,7 @@
 <script type="text/javascript" src="resources/script/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
+	
 	reloadList();
 	Categet();
 	$(".paging_area").on("click", "span", function() {
@@ -44,6 +45,7 @@ $(document).ready(function() {
 	
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		$("#no").val($(this).attr("name"));
+		
 		console.log($("#no").val());
 	});
 
@@ -86,11 +88,15 @@ $(document).ready(function() {
 	/* 카테고리 리스트 조회 */
 	$(".category_list").on("click", "li", function(){
 		$("#cate_no").val($(this).val());
-// 		console.log($("#cate_no").val());
-		reloadList();
+		flag = false;
+// 		reloadList();
 		reloadDetailList();
+		
 	});
 });
+
+var flag = false;
+
 function replyshow(obj){
 	var html ="";
 		html += "<div class=\"Blog_Comments_textbox_area\">";
@@ -146,7 +152,6 @@ function reloadDetailList() {
 	});
 }
 
-
 function redrawList(list) {
 	var html ="";
 	console.log(list);
@@ -165,6 +170,14 @@ function redrawList(list) {
 	}
 	
 	$("tbody").html(html);
+	
+	$(".Blog_table>tbody>tr").each(function() {
+		var loc = $(this);
+		if(loc.attr("name") == list[0].B_NO && !flag) {
+			flag = true;
+			loc.click();
+		}
+	});
 }
 function redrawList1(data) {
 	var html ="";
@@ -330,9 +343,9 @@ function redrawPaging(pb) {
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
-				<span>내 블로그</span>&nbsp; | &nbsp;
-				<span>이웃블로그</span>&nbsp; | &nbsp;
-				<span>블로그 홈</span>&nbsp; | &nbsp;
+<!-- 				<span>내 블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>이웃블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>블로그 홈</span>&nbsp; | &nbsp; -->
 			</div>
 		</div>
 	</div>	
@@ -378,6 +391,7 @@ function redrawPaging(pb) {
 <!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
 					<div class="Blog_Comments_reply" >
 					</div>
+					
 				</div>
 				<div class="Blog_Comments_box">
 					<div class="Blog_Comments_author">
@@ -404,9 +418,16 @@ function redrawPaging(pb) {
 						<div class="Blog_Comments_textbox_author">
 							작성자 : ${sBmNm}
 						</div>
-						<textarea class="Blog_Comments_textbox"  placeholder="댓글을 작성하려면 로그인 해주세요" id="Comment_textarea"></textarea>
-						<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
-						
+						<c:choose>
+							<c:when test="${!empty sBmNo}">
+								<textarea class="Blog_Comments_textbox" id="Comment_textarea"></textarea>
+								<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
+							</c:when>
+							<c:otherwise>
+								<textarea class="Blog_Comments_textbox"  placeholder="댓글을 작성하려면 로그인 해주세요" readonly="readonly" id="Comment_textarea"></textarea>
+								<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
+							</c:otherwise>
+						</c:choose>
 					</div>
 			</div>
 		</div>

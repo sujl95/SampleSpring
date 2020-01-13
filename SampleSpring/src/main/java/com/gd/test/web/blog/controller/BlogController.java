@@ -162,6 +162,7 @@ public class BlogController {
 		Map<String,Object> modelMap = new HashMap<String,Object>();
 		try {
 			iBlogService.insertData(params);
+			
 			modelMap.put("res","SUCCESS");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -325,7 +326,6 @@ public class BlogController {
 					params.put("catedata",Integer.toString(catedata));
 				}
 			}
-			
 	//		iBlogService.updateHit(params);
 			HashMap<String,String> data = iBlogService.getcateData(params);
 			modelMap.put("data", data);
@@ -352,9 +352,9 @@ public class BlogController {
 		Map<String,Object> modelMap = new HashMap<String,Object>();
 		
 		iBlogService.updateHit(params);
-//		System.out.println("param =" +params);
+		System.out.println("param =" +params);
 		int cnt = iBlogService.getBlogCnt(params);
-		
+		System.out.println("param cate_no =" +params.get("cate_no"));
 		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
 		
 		params.put("startCnt" , Integer.toString(pb.getStartCount()));

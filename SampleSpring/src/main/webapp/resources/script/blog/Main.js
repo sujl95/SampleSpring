@@ -23,7 +23,8 @@ $(document).ready(function() {
 		reloadList();
 	});
 	$("#writeBtn").on("click", function() {
-		location.href = "blog_Write";
+		$("#actionForm").attr("action","blog_Write");
+		$("#actionForm").submit();
 	});
 	
 	$("#modifyBtn").on("click",function() {

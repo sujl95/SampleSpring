@@ -57,7 +57,7 @@
 		                AND BM.DEL_YN = 1
 		WHERE B.DEL_YN = 1
 		AND BM.BM_NO = #{bmno}
-		<if test="cate_no == '' and cate_no == 0">
+		<if test="cate_no != 0 and cate_no != ''">
 			 AND CT_NAME = #{cate_no}
 		</if>
 		<if test="searchTxt != null and searchTxt != ''">
@@ -152,7 +152,7 @@
 		    )B
 		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
 		      
-		ORDER BY B.B_NO
+		ORDER BY B.B_NO DESC
 	</select>
 	<select id="getAllBCnt" parameterType="hashmap" resultType="Integer">
 		SELECT COUNT(*) AS CNT
@@ -183,25 +183,57 @@
 						B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
 						'|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,B.CT_NAME FROM BLOG_B B INNER JOIN 
 						BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO 
-						WHERE B.B_NO = #{no} ORDER BY B.B_NO )
+						  
+						<if test="no != ''">
+						WHERE B.B_NO = #{no}
+					    </if> 	
+					    ORDER BY B.B_NO )
 
 	</select>
 	<select id="geticateData" parameterType="hashmap" resultType="Integer">
-		SELECT B.CT_NAME FROM BLOG_B B INNER JOIN 
+		<choose>
+			<when test="no != ''">
+						SELECT B.CT_NAME FROM BLOG_B B INNER JOIN 
 						BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO 
-						WHERE B.B_NO = #{no} ORDER BY B.B_NO 
+						WHERE B.B_NO = #{no}
+					    ORDER BY B.B_NO 
+		    </when> 
+	    	<otherwise>
+				    	SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+						      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+						      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
+						      AS CT_NAME , RANK()OVER (ORDER BY B_NO DESC) AS RNK
+						      FROM BLOG_B B INNER JOIN 
+						      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.BM_NO = #{bmno})
+						WHERE RNK = 1
+			</otherwise>
+		</choose>
 	</select>
 	<!-- 상세보기 카테고리 조회 -->
 	<select id="getcateData" parameterType="hashmap" resultType="hashmap">
-	      <if test="cate_no == '' or cate_no == 0">
+<!-- 	      <if test="cate_no == '' or cate_no == 0"> -->
+			  <if test="no != ''">
 		      SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
 			  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
 			  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
 				AS CT_NAME
 			  FROM BLOG_B B INNER JOIN 
-			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO WHERE B.B_NO = #{no} ORDER BY B.B_NO )
-	      </if>
-		  <if test="cate_no != '' and cate_no != 0">
+			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO  
+				WHERE B.B_NO = #{no}
+				 ORDER BY B.B_NO ASC )
+		      </if>
+		      <if test="no == ''">
+				 SELECT * FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+				      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+				      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
+				      AS CT_NAME , RANK()OVER (ORDER BY B_NO DESC) AS RNK
+				      FROM BLOG_B B INNER JOIN 
+				      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.BM_NO = #{bmno})
+				WHERE RNK = 1
+		      </if>  
+			  
+<!-- 	      </if> -->
+			  <if test="cate_no != 0 and cate_no != ''">
 			  SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
 						      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
 						      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
@@ -209,7 +241,7 @@
 						      FROM BLOG_B B INNER JOIN 
 						      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.CT_NAME = ${cate_no} AND B.BM_NO = #{bmno})
 						WHERE RNK = 1
-		  </if>
+	 		  </if>
 	</select>
 	<!-- 회원 카데고리 글쓰기 수정가져오기 -->
 	<select id="getBMWCT" parameterType="hashmap" resultType="hashmap">

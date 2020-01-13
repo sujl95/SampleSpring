@@ -69,7 +69,7 @@ $(document).ready(function() {
 			$("#con").focus();
 		} else {
 			//jQuery 활용
-			var params = $("#saveForm").serialize(); //serialize폼안에 값 전달()
+			var params = $("#actionForm").serialize(); //serialize폼안에 값 전달()
 			
 			$.ajax({
 				type : "post", //데이터 전송방식
@@ -79,7 +79,10 @@ $(document).ready(function() {
 				//{키 : 값, 키 : 값,...} -> json
 				success : function(result) {
 					if(result.res=="SUCCESS") {
-						location.href = "blog_List";
+// 						console.log("bWriteAjax params" +params);
+
+						$("#actionForm").attr("action","blog_List");
+						$("#actionForm").submit();
 					} else {
 						alert("등록에 실패하였습니다");
 					}
@@ -99,6 +102,21 @@ $(document).ready(function() {
 		//뒤로가기
 		history.back();
 	});
+// 	$("select[name=category_select").change(function() {
+// 		console.log($("select[name=category_select").val());
+// 	});
+	
+		console.log($("#category_select option:selected").val());
+
+	$("select[name=category_select").change(function() {
+		console.log("체크");
+        alert($(this).val());
+
+        alert($(this).children("option:selected").text());
+
+
+	});
+
 });
 function Categet() {
 	var params = $("#actionForm").serialize();
@@ -168,7 +186,7 @@ function reloadcateList(data, ct,cateAllcnt) {
 			html += "	</ul>                                                           ";
 			html1 +="</select>                                            ";
 	}                                                                                  
- 	$(".category_list").html(html);
+//  	$(".category_list").html(html);
  	$(".category_get").html(html1);
 }
 /* 글쓰기 */
@@ -199,26 +217,6 @@ function blog_write(data) {
 	</div>
 	<div class="category">
 		<ul class="category_list">
-			<li>
-				<a>카테고리 <span class="c_cnt">(0)</span></a>
-			</li>
-				<ul>
-					<li>
-						<a>카테고리1 <span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리2<span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리3<span class="c_cnt">(0)</span></a>
-					</li>						
-					<li>
-						<a>카테고리4<span class="c_cnt">()</span></a>
-					</li>						
-					<li>
-						<a>카테고리5<span class="c_cnt">(0)</span></a>
-					</li>						
-				</ul>
 		</ul>
 	</div>
 </div>
@@ -228,8 +226,10 @@ function blog_write(data) {
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
-				 <form action="#" id="actionForm">
-					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
+<!-- 				 <form action="#" id="actionForm"> -->
+<%-- 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/> --%>
+<%-- 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/> --%>
+					
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
 							<option value="0">제목</option>
@@ -243,7 +243,7 @@ function blog_write(data) {
 						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
 					</div>
-				</form>
+<!-- 				</form> -->
 			</div>
 			<c:choose>
 				<c:when test="${!empty sBmNo}">
@@ -279,15 +279,19 @@ function blog_write(data) {
 					<input class="btn" type="button" id="saveBtn" value="저장"/>
 					<input class="btn" type="button" id="cancelBtn" value="취소"/>
 				</div>
-			<form action="#" id="saveForm" method="post">
-				<input type="hidden" name="bm_no" value="${sBmNo}"/>
+			<form action="#" id="actionForm" method="post">
+				<input type="hidden" name="page" id="page" value="1"/>
+					<input type="hidden" name="no" id="no" value="${param.no}"/>
+					<input type="hidden" name="bmno" id="bmno" value="${sBmNo}"/>
+					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
+					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 				<table border="1" cellspacing="0" class="write_table">
 					<tbody>
 						<tr>
 							<th>카테고리</th>
 							<td>
 								<div class="category_get">
-									<select name="category_select" style="width : 100%;">
+									<select name="category_select" style="width : 100%;" id="category_select">
 										<option value="0">${data.CT1}</option>
 										<option value="1">${data.CT2}</option>
 										<option value="2">${data.CT3}</option>

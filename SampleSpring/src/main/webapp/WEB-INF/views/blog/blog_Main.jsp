@@ -155,7 +155,7 @@ function redrawPaging(pb) {
 				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
-					<input type="hidden" name="bmno" id="bmno" value="1"/>
+					<input type="hidden" name="bmno" id="bmno" value="${sBmNo}"/>
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 					<div class="search_area">

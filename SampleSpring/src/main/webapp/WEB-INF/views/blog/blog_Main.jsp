@@ -22,10 +22,7 @@ $(document).ready(function() {
 	reloadList();
 // 	Categet();
 	
-	$("#searchBtn").on("click", function() {
-		$("#page").val("1");
-		reloadList();
-	});
+	
 	
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
@@ -159,16 +156,16 @@ function redrawPaging(pb) {
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 					<div class="search_area">
-						<select name="searchGbn" style="height: 100%;">
-							<option value="0">제목</option>
-							<option value="1">작성자</option>
-							<option value="2">제목 + 작성자</option>
-						</select>
-						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
-						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
+<!-- 						<select name="searchGbn" style="height: 100%;"> -->
+<!-- 							<option value="0">제목</option> -->
+<!-- 							<option value="1">작성자</option> -->
+<!-- 							<option value="2">제목 + 작성자</option> -->
+<!-- 						</select> -->
+<!-- 						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/> -->
+<!-- 						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/> -->
 					
 					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
+						<input type="button" value="글쓰기" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
 					</div>
 				</form>
@@ -189,9 +186,9 @@ function redrawPaging(pb) {
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
-				<span>내 블로그</span>&nbsp; | &nbsp;
-				<span>이웃블로그</span>&nbsp; | &nbsp;
-				<span>블로그 홈</span>&nbsp; | &nbsp;
+<!-- 				<span>내 블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>이웃블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>블로그 홈</span>&nbsp; | &nbsp; -->
 			</div>
 		</div>
 	</div>

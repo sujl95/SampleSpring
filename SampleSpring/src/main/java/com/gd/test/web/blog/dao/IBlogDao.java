@@ -59,6 +59,15 @@ public interface IBlogDao {
 
 	int getCTWCnt(HashMap<String, String> params) throws Throwable;
 
+	int getBlogReplyCnt(HashMap<String, String> params) throws Throwable;
+
+	List<HashMap<String, String>> getreplylist(HashMap<String, String> params) throws Throwable;
+
+	void deleteData(HashMap<String, String> params) throws Throwable;
+
+	void insertReply(HashMap<String, String> params) throws Throwable;
+
+
 
 
 

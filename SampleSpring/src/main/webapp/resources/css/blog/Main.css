@@ -104,6 +104,7 @@ html , body {
 }
 .gnb_btn_area {
 	margin-top : 10px;
+	line-height: 3;
 }
 
 .gnb_area_bottom {
@@ -121,6 +122,7 @@ html , body {
 	padding : 5px;
 	vertical-align: top;
 	text-align: center;
+	line-height: 2;
 }
 .setting_area {
 	display : none;
@@ -412,6 +414,17 @@ html , body {
 }
 
 .paging_area > span {
+	cursor : pointer;
+}
+/* 덧글 페이징 */
+.reply_paging_area {
+	margin-top : 20px;
+	text-align : center;
+	height : 50px;
+	font-size : 20px;
+}
+
+.reply_paging_area > span {
 	cursor : pointer;
 }
 

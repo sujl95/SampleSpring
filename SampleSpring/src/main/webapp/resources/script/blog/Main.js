@@ -109,39 +109,40 @@ function reloadcateList(data, ct,cateAllcnt) {
 	} else {
 //		html += " <form action=\"#\" id=\"cateForm\" method=\"post\">";
 		html += "		<li name=\"category_num\" id=\"category_num\" value=\"0\">                                                        ";
-		html += "<a>전체 <span class=\"c_cnt\">("+cateAllcnt+")</span></a>                    ";
+		html += "<a>전체 </a> <span class=\"c_cnt\">("+cateAllcnt+")</span>                    ";
+		
 		html += "</li>                                                              ";
 		html += "	<ul class=\"category_list_area\">                                                            ";
 		html1 +="<select name=\"category_select\"; style=\"width : 100%;\">";
 		if(typeof data.CT1 != "undefined") {
 			html += "		<li name=\"category_num\" id=\"category_num\" value=\"1\">                                                        ";
-			html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
+			html += "			<a>"+data.CT1+" </a> <span class=\"c_cnt\">("+ct[0]+")</span>            ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"0\">"+data.CT1+"</option>            ";
 		}
 		if(typeof data.CT2 != "undefined") {
 			html += "		<li name=\"category_num\" id=\"category_num\" value=\"2\">                                                        ";
-			html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
+			html += "			<a>"+data.CT2+" </a> <span class=\"c_cnt\">("+ct[1]+")</span>        ";
 			html += "		</li>						                                ";
 			
 			html1 +="	<option value=\"1\">"+data.CT2+"</option>            ";
 		}
 		if(typeof data.CT3 != "undefined") {
 			html += "		<li name=\"category_num\" id=\"category_num\" value=\"3\">                                                        ";
-			html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
+			html += "			<a>"+data.CT3+" </a> <span class=\"c_cnt\">("+ct[2]+")</span>";
 			html += "		</li>						                                ";
 			
 			html1 +="	<option value=\"2\">"+data.CT3+"</option>            ";
 		}
 		if(typeof data.CT4 != "undefined") {
 			html += "		<li name=\"category_num\" id=\"category_num\" value=\"4\">                                                        ";
-			html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
+			html += "			<a>"+data.CT4+" </a> <span class=\"c_cnt\">("+ct[3]+")</span>          ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"3\">"+data.CT4+"</option>            ";
 		}
 		if(typeof data.CT5 != "undefined") {
 			html += "		<li name=\"category_num\" id=\"category_num\" value=\"5\">                                                        ";
-			html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
+			html += "			<a>"+data.CT5+" </a> <span class=\"c_cnt\">("+ct[4]+")</span>               ";
 			html += "		</li>						                                ";
 			html1 +="	<option value=\"4\">"+data.CT5+"</option>            ";
 		}
@@ -164,28 +165,28 @@ function reloadcate(data, ct,cateAllcnt) {
 			html += "</li>                                                              ";
 			html += "	<ul class=\"category_list_area\">                                                            ";
 			if(typeof data.CT1 != "undefined") {
-				html += "		<li name=\"category_num\" id=\"category_num\" value=\"1\">                                                        ";
-				html += "			<a>"+data.CT1+" <span class=\"c_cnt\">("+ct[0]+")</span></a>            ";
+				html += "		<li name=\"category_num\" class=\"category_num\" value=\"1\">                                                        ";
+				html += "			<a>"+data.CT1+" </a> <span class=\"c_cnt\">("+ct[0]+")</span>            ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT2 != "undefined") {
-				html += "		<li name=\"category_num\" id=\"category_num\" value=\"2\">                                                        ";
-				html += "			<a>"+data.CT2+" <span class=\"c_cnt\">("+ct[1]+")</span></a>        ";
+				html += "		<li name=\"category_num\" class=\"category_num\" value=\"2\">                                                        ";
+				html += "			<a>"+data.CT2+" </a> <span class=\"c_cnt\">("+ct[1]+")</span>       ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT3 != "undefined") {
-				html += "		<li name=\"category_num\" id=\"category_num\" value=\"3\">                                                        ";
-				html += "			<a>"+data.CT3+" <span class=\"c_cnt\">("+ct[2]+")</span></a> ";
+				html += "		<li name=\"category_num\" class=\"category_num\" value=\"3\">                                                        ";
+				html += "			<a>"+data.CT3+" </a> <span class=\"c_cnt\">("+ct[2]+")</span>";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT4 != "undefined") {
-				html += "		<li name=\"category_num\" id=\"category_num\" value=\"4\">                                                        ";
-				html += "			<a>"+data.CT4+" <span class=\"c_cnt\">("+ct[3]+")</span></a>           ";
+				html += "		<li name=\"category_num\" class=\"category_num\" value=\"4\">                                                        ";
+				html += "			<a>"+data.CT4+" </a> <span class=\"c_cnt\">("+ct[3]+")</span>          ";
 				html += "		</li>						                                ";
 			}
 			if(typeof data.CT5 != "undefined") {
-				html += "		<li name=\"category_num\" id=\"category_num\" value=\"5\">                                                        ";
-				html += "			<a>"+data.CT5+" <span class=\"c_cnt\">("+ct[4]+")</span></a>               ";
+				html += "		<li name=\"category_num\" class=\"category_num\" value=\"5\">                                                        ";
+				html += "			<a>"+data.CT5+" </a> <span class=\"c_cnt\">("+ct[4]+")</span>              ";
 				html += "		</li>						                                ";
 			}
 			html += "	</ul>                                                           ";

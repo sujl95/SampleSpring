@@ -31,7 +31,7 @@
 		B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 
 		'||TO_CHAR( B.B_DT,'MI')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY B.B_NO DESC) AS 
 		RNUM FROM BLOG_B B INNER JOIN BLOG_BM BM ON B.BM_NO = BM.BM_NO AND BM.DEL_YN = 1 WHERE B.DEL_YN 
-		= 1) B INNER JOIN (SELECT * FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) 
+		= 1) B INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) 
 		AS RNK ,BM_NO,B_NO FROM BLOG_B B WHERE DEL_YN = 1 GROUP BY BM_NO,B_NO) WHERE RNK =1 ) BM ON 
 		B.B_NO = BM.B_NO )
 		<if test="searchTxt != null and searchTxt != ''">
@@ -75,6 +75,12 @@
 			</choose>
 		</if>
 	</select>
+	<!-- 댓글 카운트 -->
+	<select id="getBlogReplyCnt" parameterType="hashmap" resultType="Integer">
+		SELECT  COUNT(*) AS CNT
+		FROM BLOG_B B INNER JOIN BLOG_REPLY R  ON B.B_NO = R.B_NO INNER JOIN BLOG_BM BM ON BM.BM_NO = B.BM_NO
+		WHERE B.B_NO = #{no}
+	</select>
 	<!-- 리스트가져오기 -->
 	<select id="getB" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT
@@ -115,12 +121,26 @@
 		    
 		    WHERE B.DEL_YN = 1) B 
 		    INNER JOIN (SELECT *
-		                FROM (SELECT RANK() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) AS RNK ,BM_NO,B_NO
+		                FROM (SELECT ROW_NUMBER() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) AS RNK ,BM_NO,B_NO
 		                      FROM BLOG_B B
 		                      WHERE DEL_YN = 1
 		                      GROUP BY BM_NO,B_NO) 
 		                WHERE RNK =1 ) BM ON B.B_NO = BM.B_NO
 	</select>
+	<!-- 댓글 리스트 가져오기 -->
+	<select id="getreplylist" parameterType="hashmap" resultType="hashmap">
+		SELECT B.B_NO,B.BM_NO,B.REPLY_NO,B.REPLY_CONTENTS,B.BM_NM,B.REPLY_DT
+		FROM( SELECT  B.B_NO,B.BM_NO,R.REPLY_NO,R.REPLY_CONTENTS,BM.BM_NM, TO_CHAR(R.REPLY_DT, 'YYYY.MM.DD HH24:MI') AS REPLY_DT ,ROW_NUMBER() OVER(ORDER BY
+		                B.B_NO DESC) AS RNUM
+			  FROM BLOG_B B INNER JOIN BLOG_REPLY R  ON B.B_NO = R.B_NO INNER JOIN BLOG_BM BM ON BM.BM_NO = R.BM_NO
+			  WHERE B.B_NO = #{no} ) B
+	  	WHERE B.RNUM BETWEEN #{rpstartCnt} AND #{rpendCnt}
+	</select>
+	<!-- 댓글 등록하기 -->
+	<insert id="insertReply" parameterType="hashmap">
+		INSERT INTO BLOG_REPLY(REPLY_NO , B_NO, REPLY_CONTENTS , REPLY_DT ,BM_NO) 
+		VALUES (BLOG_REPLY_SEQ.nextval , #{no} , #{Comment_textarea} ,SYSDATE ,#{bm_NO})
+	</insert>
 	<!-- 개인 블로그 게시글 리스트 가져오기 -->
 	<select id="getBlogList" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT,B.BM_NO,B.B_CON
@@ -198,50 +218,61 @@
 						WHERE B.B_NO = #{no}
 					    ORDER BY B.B_NO 
 		    </when> 
-	    	<otherwise>
-				    	SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
-						      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
-						      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
-						      AS CT_NAME , RANK()OVER (ORDER BY B_NO DESC) AS RNK
-						      FROM BLOG_B B INNER JOIN 
-						      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.BM_NO = #{bmno})
-						WHERE RNK = 1
-			</otherwise>
+	    	<when test="no == ''">
+ 						SELECT CT_NAME FROM(SELECT B.CT_NAME, ROW_NUMBER()OVER (ORDER BY B.B_DT DESC) AS RNK FROM BLOG_B B INNER JOIN 
+						BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO 
+						WHERE BM.BM_NO = #{bmno}
+					    ORDER BY B_DT DESC)
+                        WHERE RNK = 1
+			</when>
 		</choose>
 	</select>
 	<!-- 상세보기 카테고리 조회 -->
 	<select id="getcateData" parameterType="hashmap" resultType="hashmap">
 <!-- 	      <if test="cate_no == '' or cate_no == 0"> -->
-			  <if test="no != ''">
-		      SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
-			  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
-			  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
-				AS CT_NAME
-			  FROM BLOG_B B INNER JOIN 
-			  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO  
-				WHERE B.B_NO = #{no}
+			 <choose>
+			 	<when test="cate_no != 0 and cate_no != '' and no != ''">
+				  SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+								  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+								  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
+									AS CT_NAME
+								  FROM BLOG_B B INNER JOIN 
+								  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO  
+				 WHERE B.B_NO = #{no}
 				 ORDER BY B.B_NO ASC )
-		      </if>
-		      <if test="no == ''">
-				 SELECT * FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+		 		</when>
+			 	<when test="cate_no != 0 and cate_no != '' and no == ''">
+				  SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+							      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+							      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
+							      AS CT_NAME , ROW_NUMBER()OVER (ORDER BY B_NO DESC) AS RNK
+							      FROM BLOG_B B INNER JOIN 
+							      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.CT_NAME = ${cate_no} AND B.BM_NO = #{bmno})
+							WHERE RNK = 1
+		 		</when>
+				<when test="no != ''">
+				  SELECT * FROM ( SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
+				  B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
+				  '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
+					AS CT_NAME
+				  FROM BLOG_B B INNER JOIN 
+				  BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO  
+					WHERE B.B_NO = #{no}
+					 ORDER BY B.B_NO ASC )
+				</when>		
+				<when test="no == ''">
+					 SELECT * FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
 				      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
-				      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
-				      AS CT_NAME , RANK()OVER (ORDER BY B_NO DESC) AS RNK
+				      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${catedata}
+				      AS CT_NAME , ROW_NUMBER()OVER (ORDER BY B_NO DESC) AS RNK
 				      FROM BLOG_B B INNER JOIN 
 				      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.BM_NO = #{bmno})
-				WHERE RNK = 1
-		      </if>  
-			  
+					WHERE RNK = 1
+				</when>	 
+			 </choose>
+		    
 <!-- 	      </if> -->
-			  <if test="cate_no != 0 and cate_no != ''">
-			  SELECT *	FROM (SELECT B.B_NO, B.B_TITLE, B.B_CON, (TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( 
-						      B.B_DT,'MM')||'월 ' ||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 
-						      '|| TO_CHAR( B.B_DT,'SS')||'초') AS B_DT, BM.BM_NM,b.bm_no,B.B_HIT,CT.CT${cate_no}
-						      AS CT_NAME , RANK()OVER (ORDER BY B_NO DESC) AS RNK
-						      FROM BLOG_B B INNER JOIN 
-						      BLOG_BM BM ON B.BM_NO = bm.bm_no INNER JOIN BLOG_CT CT ON BM.BM_NO = CT.BM_NO AND B.CT_NAME = ${cate_no} AND B.BM_NO = #{bmno})
-						WHERE RNK = 1
-	 		  </if>
+			
 	</select>
 	<!-- 회원 카데고리 글쓰기 수정가져오기 -->
 	<select id="getBMWCT" parameterType="hashmap" resultType="hashmap">
@@ -396,5 +427,10 @@
         </choose>
         
 		WHERE B_NO = #{no}
+	</update>
+	<!-- 글삭제 -->
+	<update id="deleteData" parameterType="hashmap">
+		UPDATE BLOG_B SET DEL_YN = 0
+		WHERE B_NO = #{no} 
 	</update>
 </mapper>

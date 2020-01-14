@@ -210,6 +210,8 @@ public class BlogController {
 		return mapper.writeValueAsString(modelMap);
 	}
 	
+	
+	
 //	회원가입 및 카테고리 초기등록
 	@RequestMapping(value = "/bJoinAjax",
 			method = RequestMethod.POST,
@@ -311,13 +313,20 @@ public class BlogController {
 		
 			System.out.println("체크");
 			int cnt = iBlogService.getBlogCnt(params);
-			
+			int recnt = iBlogService.getBlogReplyCnt(params);
+			System.out.println("recnt =>" +recnt);
 			PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
-			
+			PagingBean rppb = iPagingService.getPagingBean(Integer.parseInt(params.get("replypage")), recnt,10,5);
+			System.out.println("rppb =>" +rppb.getStartPcount());
 			params.put("startCnt" , Integer.toString(pb.getStartCount()));
 			params.put("endCnt" , Integer.toString(pb.getEndCount()));
+			params.put("rpstartCnt" , Integer.toString(rppb.getStartCount()));
+			params.put("rpendCnt" , Integer.toString(rppb.getEndCount()));
+			
 			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
 			List<HashMap<String,String>> list = iBlogService.getBlogList(params);
+			List<HashMap<String,String>> replylist = iBlogService.getreplylist(params);
+			System.out.println("replylist =>" +replylist);
 	//		System.out.println("params = " +params);
 			int catedata = iBlogService.geticateData(params);
 	//		HashMap<String,String> data = iBlogService.getData(params);
@@ -328,9 +337,14 @@ public class BlogController {
 			}
 	//		iBlogService.updateHit(params);
 			HashMap<String,String> data = iBlogService.getcateData(params);
+			System.out.println("listdata =" +data);
+			
 			modelMap.put("data", data);
 			modelMap.put("list",list);
 			modelMap.put("pb",pb);
+			modelMap.put("replylist",replylist);
+			modelMap.put("rppb",rppb);
+			modelMap.put("recnt", Integer.toString(recnt));
 //		}
 //		else {
 //			int cnt = iBlogService.getBlogCateCnt(params);
@@ -353,16 +367,26 @@ public class BlogController {
 		
 		iBlogService.updateHit(params);
 		System.out.println("param =" +params);
-		int cnt = iBlogService.getBlogCnt(params);
 		System.out.println("param cate_no =" +params.get("cate_no"));
-		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
 		
+		int cnt = iBlogService.getBlogCnt(params);
+		int recnt = iBlogService.getBlogReplyCnt(params);
+		System.out.println("recnt =>" +recnt);
+		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
+		PagingBean rppb = iPagingService.getPagingBean(Integer.parseInt(params.get("replypage")), recnt,10,5);
+		System.out.println("rppb =>" +rppb.getStartPcount());
 		params.put("startCnt" , Integer.toString(pb.getStartCount()));
 		params.put("endCnt" , Integer.toString(pb.getEndCount()));
+		params.put("rpstartCnt" , Integer.toString(rppb.getStartCount()));
+		params.put("rpendCnt" , Integer.toString(rppb.getEndCount()));
 		
 		List<HashMap<String,String>> list = iBlogService.getBlogList(params);
+		List<HashMap<String,String>> replylist = iBlogService.getreplylist(params);
+		System.out.println("replylist =>" +replylist);
+		
 //		System.out.println("blogDetailAjax=params = "+ params);
 		int catedata = iBlogService.geticateData(params);
+		System.out.println("catedata =" +params.get("catedata"));
 //		System.out.println(catedata);
 //		HashMap<String,String> data = iBlogService.getData(params);
 		for ( int i = 1; i <6; i++) {
@@ -373,12 +397,52 @@ public class BlogController {
 //		System.out.println("params" +params);
 		HashMap<String,String> data = iBlogService.getcateData(params);
 //		System.out.println("data" +data);
+		modelMap.put("recnt", Integer.toString(recnt));
 		modelMap.put("data", data);
 		modelMap.put("list",list);
 		modelMap.put("pb",pb);
+		modelMap.put("replylist",replylist);
+		modelMap.put("rppb",rppb);
 		return mapper.writeValueAsString(modelMap);
 	}
+//	글삭제
+	@RequestMapping(value = "/blogDeleteAjax",
+			method = RequestMethod.POST,
+			produces = "test/json;charset=UTF-8")
+	@ResponseBody
+	public String blogDeleteAjax(@RequestParam HashMap<String,String>params, ModelAndView mav) throws Throwable {
+	ObjectMapper mapper = new ObjectMapper();
+	Map<String,Object> modelMap = new HashMap<String,Object>();
+	try {
+		iBlogService.deleteData(params);
+		modelMap.put("res","SUCCESS");
+	} catch(Exception e) {
+		e.printStackTrace();
+		modelMap.put("res","Failed");
+	}
 	
+	return mapper.writeValueAsString(modelMap);
+	}
+//	댓글등록
+	@RequestMapping(value = "/blogReplyRegisterAjax",
+			method = RequestMethod.POST,
+			produces = "test/json;charset=UTF-8")
+	@ResponseBody 
+	public String blogReplyRegisterAjax(@RequestParam HashMap<String, String>params, HttpSession session,ModelAndView modelAndView) throws Throwable{
+		ObjectMapper mapper= new ObjectMapper();
+		Map<String,Object> modelMap = new HashMap<String,Object>();
+		try {
+			System.out.println("params===>" +params);
+			params.put("bm_NO",String.valueOf(session.getAttribute("sBmNo")));
+			System.out.println("params.bm_NO"+params.get("bm_NO"));
+			iBlogService.insertReply(params);
+			modelMap.put("res","SUCCESS");
+		} catch (Exception e) {
+			e.printStackTrace();
+			modelMap.put("res", "Failed");
+		}
+		return mapper.writeValueAsString(modelMap); 
+	}
 //	회원탈퇴
 	@RequestMapping(value = "/bWithdrawalAjax",
 			method = RequestMethod.POST,

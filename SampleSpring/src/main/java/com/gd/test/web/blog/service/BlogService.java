@@ -150,6 +150,26 @@ public class BlogService implements IBlogService {
 		return iBlogDao.getCTWCnt(params);
 	}
 
+	@Override
+	public int getBlogReplyCnt(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getBlogReplyCnt(params);
+	}
+
+	@Override
+	public List<HashMap<String, String>> getreplylist(HashMap<String, String> params) throws Throwable {
+		return iBlogDao.getreplylist(params);
+	}
+
+	@Override
+	public void deleteData(HashMap<String, String> params) throws Throwable {
+		iBlogDao.deleteData(params);
+	}
+
+	@Override
+	public void insertReply(HashMap<String, String> params) throws Throwable {
+		iBlogDao.insertReply(params);
+	}
+
 
 
 		

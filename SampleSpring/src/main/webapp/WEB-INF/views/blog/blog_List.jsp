@@ -20,6 +20,60 @@ $(document).ready(function() {
 	
 	reloadList();
 	Categet();
+	$("#Comment_add").on("click", function() {
+			var params = $("#replyForm").serialize();
+			$.ajax({ 
+				type : "post",
+				url : "blogReplyRegisterAjax",
+				dataType :"json",
+				data : params,
+				success:function(result) {
+					if(result.res=="SUCCESS") {
+						alert("등록되었습니다.");
+						$("#actionForm").attr("action","blog_List");
+						$("#actionForm").submit();
+					} else {
+						alert("등록에 실패하였습니다.");
+					}
+				},
+				error:function(request,status,error) {
+					console.log("status :" + request.status); //상태코드
+					console.log("text :" + request.responceText); //request영역 반환텍스트
+					console.log("error :" + request.error); //에러메세지
+				}
+			});
+	});
+	$("#deleteBtn").on("click", function() {
+		if ('${param.bmno}' == '${sBmNo}') {
+			if (confirm("삭제하실겁니까?")) {
+				var params = $("#actionForm").serialize();
+				$.ajax({ 
+					type : "post",
+					url : "blogDeleteAjax",
+					dataType :"json",
+					data : params,
+					success:function(result) {
+						if(result.res=="SUCCESS") {
+							alert("삭제되었습니다.");
+							$("#actionForm").attr("action","blog_List");
+							$("#actionForm").submit();
+						} else {
+							alert("삭제에 실패하였습니다.");
+						}
+					},
+					error:function(request,status,error) {
+						console.log("status :" + request.status); //상태코드
+						console.log("text :" + request.responceText); //request영역 반환텍스트
+						console.log("error :" + request.error); //에러메세지
+					}
+					
+				});
+			}
+		}	else {
+			alert("본인이 올린글만 삭제 가능합니다")
+		}
+	});
+	
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -40,6 +94,7 @@ $(document).ready(function() {
 		if($(this).attr("name") != "") {
 			$("#no").val($(this).attr("name"));
 			reloadDetailList();
+// 			reloadList();
 		}
 	});
 	
@@ -89,14 +144,38 @@ $(document).ready(function() {
 	$(".category_list").on("click", "li", function(){
 		$("#cate_no").val($(this).val());
 		flag = false;
-// 		reloadList();
-		reloadDetailList();
+		$("#page").val("1");
+		$("#no").val("");
+		reloadList();
+// 		reloadDetailList();
 		
 	});
 });
 
 var flag = false;
 
+function replylist(replylist) {
+	var html = "";
+	if(replylist.length == 0) {
+		
+	} else {
+		for(var i in replylist) {
+		html +="<div class=\"Blog_Comments_box\" name=\"" + replylist[i].REPLY_NO + "\">";
+		html +="	<div class=\"Blog_Comments_author\">    ";
+		html +="		 "+ replylist[i].BM_NM +"";
+		html +="	</div>                                ";
+		html +="	<div class=\"Blog_Comments_contents\">";
+		html +="		"+ replylist[i].REPLY_CONTENTS +"";
+		html +="	</div>                                ";
+		html +="	<div class=\"Blog_Comments_date\">";
+		html +="		"+ replylist[i].REPLY_DT +"";
+		html +="	</div>                                ";
+		html +="</div>                                    ";
+		}
+	}
+	
+	$(".Blog_Comments_boxarea").html(html);
+}
 function replyshow(obj){
 	var html ="";
 		html += "<div class=\"Blog_Comments_textbox_area\">";
@@ -120,6 +199,8 @@ function reloadList() {
 		success:function(result) {
 			redrawList(result.list);
 			redrawList1(result.data);
+			replylist(result.replylist);
+			redrawreplyPaging(result.rppb);
 			redrawPaging(result.pb);
 		},
 		error:function(request,status,error) {
@@ -141,6 +222,8 @@ function reloadDetailList() {
 		success:function(result) {
 			redrawList(result.list);
 			redrawList1(result.data);
+			replylist(result.replylist);
+			redrawreplyPaging(result.rppb);
 			redrawPaging(result.pb);
 		},
 		error:function(request,status,error) {
@@ -173,9 +256,11 @@ function redrawList(list) {
 	
 	$(".Blog_table>tbody>tr").each(function() {
 		var loc = $(this);
-		if(loc.attr("name") == list[0].B_NO && !flag) {
-			flag = true;
-			loc.click();
+		if(list.length > 0) {
+			if(loc.attr("name") == list[0].B_NO && !flag) {
+				flag = true;
+				loc.click();
+			}	
 		}
 	});
 }
@@ -199,6 +284,12 @@ function redrawList1(data) {
 		html += "<div class=\"Detail_contents\">";
 		html += ""+  "조회된 글이 없습니다" + "";
 		html += "</div>";
+		
+		$(".category_num").each(function() {
+			if($(this).val() == $("#cate_no").val()) {
+				html1 += $(this).children("a").html() + "카테고리의 다른글";
+			} 
+		});
 	} else {
 			html += "<div name=\"" + data.B_NO + "\">";
 			html += "" + data.B_TITLE +"<br/>";
@@ -216,10 +307,9 @@ function redrawList1(data) {
 			html += "<div class=\"Detail_contents\">";
 			html += ""+  data.B_CON + "";
 			html += "</div>";
-			console.log($("#cate_no").val());
 			if (($("#cate_no").val() != '')){
 				if (($("#cate_no").val() != 0) || $("#cate_no").val() == '') {
-					html1 +="" +data.CT_NAME+" 카테고리의 다른글";
+					html1 += data.CT_NAME + " 카테고리의 다른글";
 				}
 				else {
 					html1 += "전체글" ;
@@ -233,6 +323,39 @@ function redrawList1(data) {
 	$(".Blog_Details").html(html);
 	$(".Blog_table_title").html(html1);
 	
+}
+function redrawreplyPaging(rppb) {
+	var html ="";
+	//첫페이지
+	html += "<span name=\"1\"><<</span>&nbsp;";
+	//이전페이지
+	
+	if($("#replypage").val() == "1" ) {
+		html += "<span name=\"1\"><</span>&nbsp;";
+	} else {
+		html += "<span name=\"" + ($("#replypage").val() * 1 - 1) + "\"><</span>&nbsp;";
+	}
+	
+	//숫자
+	for(var i = rppb.startPcount ; i <= rppb.endPcount ; i++) {
+		if($("#replypage").val() == i ) {
+			html += "<span><b>" + i + "</b></span>&nbsp;";
+		} else{
+			html += "<span name=\"" + i + "\">" + i + "</span>&nbsp;";
+		}
+	}
+	//다음페이지
+	
+	if($("#replypage").val() == rppb.maxPcount ) {
+		html += "<span name=\""+rppb.maxPcount+ "\">></span>&nbsp;";
+	} else {
+		html += "<span name=\"" + ($("#replypage").val() * 1 + 1) + "\">></span>&nbsp;";
+	}
+	
+	//마지막
+	html += "<span name=\"" + rppb.maxPcount + "\">>></span>";
+	
+	$(".reply_paging_area").html(html);
 }
 function redrawPaging(pb) {
 	var html ="";
@@ -301,17 +424,21 @@ function redrawPaging(pb) {
 		</ul>
 	</div>
 </div>
-
+ 
 <div class="whole_body">
 	<div class="wrap">
 		<div class="gnb_area">
 			<div class="gnb_btn_area">
 			<div class="gnb_search_area">
-				 <form action="#" id="actionForm" method="post">
+				<form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
+					<input type="hidden" name="replypage" id="replypage" value="1"/>
+					
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
+					<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
+					<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
 							<option value="0">제목</option>
@@ -354,13 +481,6 @@ function redrawPaging(pb) {
 		</div>
 	</div>
 	<div class="Blog_Details_area">
-<!-- 		<form action="#" method="post" id="actionForm"> -->
-			<input type="hidden" name="page" value="${param.page}"/>
-			<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
-			<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
-			<input type="hidden" name="Details_no" value="${data.B_NO}"/>
-			<input type="hidden" name="Details_bm_no" value="${data.BM_NO}"/>
-<!-- 		</form> -->
 		<div class="Blog_Details">
 			<div class="Details_header">
 				<div class="Details_title">
@@ -378,57 +498,39 @@ function redrawPaging(pb) {
 				
 			</div>
 			<div class="Blog_Comments_show">
-				<div class="Blog_Comments_box">
-					<div class="Blog_Comments_author">
-						SJ BLOG
-					</div>
-					<div class="Blog_Comments_contents">
-						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
-					</div>
-					<div class="Blog_Comments_date">
-						2020.01.02 16:00
-					</div>
-<!-- 					<input type="button" class="Blog_Comments_reply_btn" value="답글" > -->
-					<div class="Blog_Comments_reply" >
-					</div>
-					
+				<div class="Blog_Comments_boxarea">
 				</div>
-				<div class="Blog_Comments_box">
-					<div class="Blog_Comments_author">
-						SJ BLOG
-					</div>
-					<div class="Blog_Comments_contents">
-						아주GOOD입니다 아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다아주GOOD입니다
-					</div>
-					<div class="Blog_Comments_date">
-						2020.01.02 16:00
-					</div>
-<!-- 					<input type="button" class="Blog_Comments_reply_btn"  value="답글" > -->
-					<div class="Blog_Comments_reply" >
-					</div>
+				<div class="reply_paging_area">
+					<span>처음</span>
+					<span>이전</span>
+					<span>1</span>
+					<span>다음</span>
+					<span>마지막</span>
 				</div>
-				<div class="paging_area">
-						<span>처음</span>
-						<span>이전</span>
-						<span>1</span>
-						<span>다음</span>
-						<span>마지막</span>
+				
+				<div class="Blog_Comments_textbox_area">
+					<div class="Blog_Comments_textbox_author">
+						작성자 : ${sBmNm}
 					</div>
-					<div class="Blog_Comments_textbox_area">
-						<div class="Blog_Comments_textbox_author">
-							작성자 : ${sBmNm}
-						</div>
+					<form action="#" id="replyForm" method="post">
 						<c:choose>
 							<c:when test="${!empty sBmNo}">
-								<textarea class="Blog_Comments_textbox" id="Comment_textarea"></textarea>
-								<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
+							<input type="hidden" name="no" id="no" value="${param.no}"/>
+								<textarea class="Blog_Comments_textbox" name="Comment_textarea" id="Comment_textarea"></textarea>
+								<div class="Blog_Comments_textbox_cnt_area">
+									<span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;
+									<input type="button" id="Comment_add" class="btn"value="등록">
+								</div>
 							</c:when>
+							
 							<c:otherwise>
-								<textarea class="Blog_Comments_textbox"  placeholder="댓글을 작성하려면 로그인 해주세요" readonly="readonly" id="Comment_textarea"></textarea>
-								<div class="Blog_Comments_textbox_cnt_area"><span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;<input type="button" id="Comment_add" class="btn"value="등록"></div>
+								<textarea class="Blog_Comments_textbox" name="Comment_textarea" id="Comment_textarea" placeholder="댓글을 작성하려면 로그인 해주세요" readonly="readonly" id="Comment_textarea"></textarea>
+								<div class="Blog_Comments_textbox_cnt_area">
+								<span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;</div>
 							</c:otherwise>
 						</c:choose>
-					</div>
+					</form>
+				</div>
 			</div>
 		</div>
 		<div class="btn_area" style="margin-right: 40px;">

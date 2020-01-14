@@ -111,6 +111,20 @@
 	</select>
 	<!-- 블로그 메인 리스트 가져오기  -->
 	<select id="getBlog" parameterType="hashmap" resultType="hashmap">
+<!-- 			<if test="searchTxt != null and searchTxt != ''"> -->
+<!-- 				<choose> -->
+<!-- 					<when test="searchGbn eq 0"> -->
+<!-- 						AND B.B_TITLE LIKE '%' || #{searchTxt} || '%' -->
+<!-- 					</when> -->
+<!-- 					<when test="searchGbn eq 1"> -->
+<!-- 						AND BM.BM_NM LIKE '%' || #{searchTxt} || '%' -->
+<!-- 					</when> -->
+<!-- 					<when test="searchGbn eq 2"> -->
+<!-- 						AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%' -->
+<!-- 			    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%') -->
+<!-- 					</when> -->
+<!-- 				</choose> -->
+<!-- 			</if> -->
 		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO
 		FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
 						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
@@ -130,7 +144,7 @@
 	<!-- 댓글 리스트 가져오기 -->
 	<select id="getreplylist" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO,B.BM_NO,B.REPLY_NO,B.REPLY_CONTENTS,B.BM_NM,B.REPLY_DT
-		FROM( SELECT  B.B_NO,B.BM_NO,R.REPLY_NO,R.REPLY_CONTENTS,BM.BM_NM, TO_CHAR(R.REPLY_DT, 'YYYY.MM.DD HH24:MI') AS REPLY_DT ,ROW_NUMBER() OVER(ORDER BY
+		FROM( SELECT  B.B_NO,R.BM_NO,R.REPLY_NO,R.REPLY_CONTENTS,BM.BM_NM, TO_CHAR(R.REPLY_DT, 'YYYY.MM.DD HH24:MI') AS REPLY_DT ,ROW_NUMBER() OVER(ORDER BY
 		                B.B_NO DESC) AS RNUM
 			  FROM BLOG_B B INNER JOIN BLOG_REPLY R  ON B.B_NO = R.B_NO INNER JOIN BLOG_BM BM ON BM.BM_NO = R.BM_NO
 			  WHERE B.B_NO = #{no} ) B
@@ -139,8 +153,13 @@
 	<!-- 댓글 등록하기 -->
 	<insert id="insertReply" parameterType="hashmap">
 		INSERT INTO BLOG_REPLY(REPLY_NO , B_NO, REPLY_CONTENTS , REPLY_DT ,BM_NO) 
-		VALUES (BLOG_REPLY_SEQ.nextval , #{no} , #{Comment_textarea} ,SYSDATE ,#{bm_NO})
+		VALUES (BLOG_REPLY_SEQ.nextval , #{rno} , #{Comment_textarea} ,SYSDATE ,#{bm_NO})
 	</insert>
+	<!-- 댓글 삭제하기 -->
+	<delete id="deleteReply" parameterType="hashmap">
+		DELETE FROM BLOG_REPLY 
+		WHERE REPLY_NO = #{replyno}
+	</delete>
 	<!-- 개인 블로그 게시글 리스트 가져오기 -->
 	<select id="getBlogList" parameterType="hashmap" resultType="hashmap">
 		SELECT B.B_NO, B.B_TITLE,B.BM_NM,B.B_DT,B.B_HIT,B.BM_NO,B.B_CON
@@ -155,20 +174,20 @@
 		      	<if test="cate_no != '' and cate_no != 0">
 					 AND CT_NAME = #{cate_no}
 				</if>
-        <if test="searchTxt != null and searchTxt != ''">
-			<choose>
-				<when test="searchGbn eq 0">
-					AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 1">
-					AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 2">
-					AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-		    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
-				</when>
-			</choose>
-		</if>
+		        <if test="searchTxt != null and searchTxt != ''">
+					<choose>
+						<when test="searchGbn eq 0">
+							AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+						</when>
+						<when test="searchGbn eq 1">
+							AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
+						</when>
+						<when test="searchGbn eq 2">
+							AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
+				    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
+						</when>
+					</choose>
+				</if>
 		    )B
 		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
 		      

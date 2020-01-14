@@ -167,5 +167,10 @@ public class BlogDao implements IBlogDao{
 	public void insertReply(HashMap<String, String> params) throws Throwable {
 		sqlSession.insert("blog.insertReply",params);
 	}
+
+	@Override
+	public void deleteReply(HashMap<String, String> params) throws Throwable {
+		sqlSession.delete("blog.deleteReply",params);
+	}
 	
 }

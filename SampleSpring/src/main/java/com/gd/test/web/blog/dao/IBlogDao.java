@@ -67,6 +67,8 @@ public interface IBlogDao {
 
 	void insertReply(HashMap<String, String> params) throws Throwable;
 
+	void deleteReply(HashMap<String, String> params) throws Throwable;
+
 
 
 

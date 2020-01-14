@@ -170,6 +170,11 @@ public class BlogService implements IBlogService {
 		iBlogDao.insertReply(params);
 	}
 
+	@Override
+	public void deleteReply(HashMap<String, String> params) throws Throwable {
+		iBlogDao.deleteReply(params);
+	}
+
 
 
 		

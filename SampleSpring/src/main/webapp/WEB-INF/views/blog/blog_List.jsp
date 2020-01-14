@@ -20,6 +20,7 @@ $(document).ready(function() {
 	
 	reloadList();
 	Categet();
+	/* 댓글등록 */
 	$("#Comment_add").on("click", function() {
 			var params = $("#replyForm").serialize();
 			$.ajax({ 
@@ -29,7 +30,7 @@ $(document).ready(function() {
 				data : params,
 				success:function(result) {
 					if(result.res=="SUCCESS") {
-						alert("등록되었습니다.");
+// 						alert("등록되었습니다.");
 						$("#actionForm").attr("action","blog_List");
 						$("#actionForm").submit();
 					} else {
@@ -43,6 +44,7 @@ $(document).ready(function() {
 				}
 			});
 	});
+	/* 글삭제 */
 	$("#deleteBtn").on("click", function() {
 		if ('${param.bmno}' == '${sBmNo}') {
 			if (confirm("삭제하실겁니까?")) {
@@ -54,7 +56,7 @@ $(document).ready(function() {
 					data : params,
 					success:function(result) {
 						if(result.res=="SUCCESS") {
-							alert("삭제되었습니다.");
+// 							alert("삭제되었습니다.");
 							$("#actionForm").attr("action","blog_List");
 							$("#actionForm").submit();
 						} else {
@@ -73,7 +75,7 @@ $(document).ready(function() {
 			alert("본인이 올린글만 삭제 가능합니다")
 		}
 	});
-	
+	/* 페이지버튼 클릭시 */
 	$(".paging_area").on("click", "span", function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -81,6 +83,16 @@ $(document).ready(function() {
 			reloadList();	
 		}
 	});
+	
+	/*댓글 페이지버튼 클릭시 */
+	$(".reply_paging_area").on("click", "span", function() {
+		console.log($(this).attr("name"));
+		if($(this).attr("name") != "") {
+			$("#replypage").val($(this).attr("name"));
+			reloadList();	
+		}
+	});
+	/* 수정버튼 클릭시 */
 	$("#updateBtn").on("click", function() {
 		if ('${param.bmno}' == '${sBmNo}') {
 			$("#actionForm").attr("action","blog_Update");
@@ -89,6 +101,8 @@ $(document).ready(function() {
 			alert("본인이 올린글만 수정가능합니다")
 		}
 	});
+	
+	/* 게시글목록 게시글 클릭시 */
 	$("tbody").on("click","tr",function() {
 		$("#no").val($(this).attr("name"));
 		if($(this).attr("name") != "") {
@@ -98,12 +112,14 @@ $(document).ready(function() {
 		}
 	});
 	
+	/*  */
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		$("#no").val($(this).attr("name"));
 		
 		console.log($("#no").val());
 	});
-
+	
+	/* 댓글 카운팅 */
 	$("#Comment_textarea").on("keyup",function() {
 		var content = $(this).val();
 		console.log(content.length);
@@ -116,6 +132,7 @@ $(document).ready(function() {
 	    }
 	});
 	
+	/* 댓글 숨기기 보기 */
 	$(".Blog_Comments_Button").on("click", function() {
 		if($(".Blog_Comments_show").css("display") == "none"){
 			console.log("체크");
@@ -126,19 +143,21 @@ $(document).ready(function() {
 			$("#Blog_Comments_show").html("댓글 숨기기");
 		}
 	});
-	$(".Blog_Comments_reply_btn").on("click", function() {
-		if($(this).parent().children(".Blog_Comments_reply").css("display") == "none"){
-			replyshow($(this).parent().children(".Blog_Comments_reply"));
-			console.log("체크");
-			$(this).parent().children(".Blog_Comments_reply").show();
-			$(this).css("background-color","#cacaca");
-			$(this).css("color","#FFFFFF");
-		}else{
-			$(this).parent().children(".Blog_Comments_reply").hide();
-			$(this).css("background-color","#F0F0F0");
-			$(this).css("color","black");
-		}
-	});
+	
+// 	답글
+// 	$(".Blog_Comments_reply_btn").on("click", function() {
+// 		if($(this).parent().children(".Blog_Comments_reply").css("display") == "none"){
+// 			replyshow($(this).parent().children(".Blog_Comments_reply"));
+// 			console.log("체크");
+// 			$(this).parent().children(".Blog_Comments_reply").show();
+// 			$(this).css("background-color","#cacaca");
+// 			$(this).css("color","#FFFFFF");
+// 		}else{
+// 			$(this).parent().children(".Blog_Comments_reply").hide();
+// 			$(this).css("background-color","#F0F0F0");
+// 			$(this).css("color","black");
+// 		}
+// 	});
 	
 	/* 카테고리 리스트 조회 */
 	$(".category_list").on("click", "li", function(){
@@ -150,31 +169,85 @@ $(document).ready(function() {
 // 		reloadDetailList();
 		
 	});
+	
+	/* 댓글 삭제 */
+	$(".Blog_Comments_show").on("click",".reply_del",function() {
+		console.log("체크");
+		console.log($(this).attr("name"));
+		$("#replyno").val($(this).attr("name"));
+		console.log($("#replyno").val())
+		if($(this).attr("name") != "") {
+// 			$("#page").val($(this).attr("name"));
+// 			reloadList();	
+		}
+		
+		if (confirm("삭제하실겁니까?")) {
+			var params = $("#replyForm").serialize();
+			$.ajax({ 
+				type : "post",
+				url : "blogreplyDeleteAjax",
+				dataType :"json",
+				data : params,
+				success:function(result) {
+					if(result.res=="SUCCESS") {
+//							alert("삭제되었습니다.");
+						$("#actionForm").attr("action","blog_List");
+						$("#actionForm").submit();
+					} else {
+						alert("삭제에 실패하였습니다.");
+					}
+				},
+				error:function(request,status,error) {
+					console.log("status :" + request.status); //상태코드
+					console.log("text :" + request.responceText); //request영역 반환텍스트
+					console.log("error :" + request.error); //에러메세지
+				}
+				
+			});
+		}
+	});
+	
+	/* 검색 */
+	$("#searchBtn").on("click", function() {
+		$("#page").val("1");
+		reloadList();
+	});
 });
 
 var flag = false;
 
 function replylist(replylist) {
 	var html = "";
+	
+	var sBmNo= $("#bm_no").val(); 
 	if(replylist.length == 0) {
 		
 	} else {
 		for(var i in replylist) {
-		html +="<div class=\"Blog_Comments_box\" name=\"" + replylist[i].REPLY_NO + "\">";
-		html +="	<div class=\"Blog_Comments_author\">    ";
-		html +="		 "+ replylist[i].BM_NM +"";
-		html +="	</div>                                ";
-		html +="	<div class=\"Blog_Comments_contents\">";
-		html +="		"+ replylist[i].REPLY_CONTENTS +"";
-		html +="	</div>                                ";
-		html +="	<div class=\"Blog_Comments_date\">";
-		html +="		"+ replylist[i].REPLY_DT +"";
-		html +="	</div>                                ";
-		html +="</div>                                    ";
-		}
+			html +="<div class=\"Blog_Comments_box\" name=\"" + replylist[i].REPLY_NO + "\">";
+			html +="	<div class=\"Blog_Comments_author\">    ";
+			html +="		 "+ replylist[i].BM_NM +"";
+			html +="	</div>                                ";
+			html +="	<div class=\"Blog_Comments_contents\">";
+			html +="		"+ replylist[i].REPLY_CONTENTS +"";
+			html +="	</div>                                ";
+			html +="	<div class=\"Blog_Comments_date\">";
+			html +="		"+ replylist[i].REPLY_DT +"";
+			if(sBmNo == replylist[i].BM_NO) {
+			var replycnt = replylist[i].BM_NO;
+				html +="<input type=\"button\" name=\""+replylist[i].REPLY_NO+"\"  id=\"Comment_del\"  class=\"reply_del\"value=\"삭제\">" ;
+			}
+			html +="	</div>                                ";
+			html +="</div>                                    ";
+			}
 	}
 	
 	$(".Blog_Comments_boxarea").html(html);
+}
+function replyCnt(recnt) {
+	var html = "";
+	html += recnt;
+	$(".Blog_Comments_Cnt").html(html);
 }
 function replyshow(obj){
 	var html ="";
@@ -201,6 +274,7 @@ function reloadList() {
 			redrawList1(result.data);
 			replylist(result.replylist);
 			redrawreplyPaging(result.rppb);
+			replyCnt(result.recnt);
 			redrawPaging(result.pb);
 		},
 		error:function(request,status,error) {
@@ -224,6 +298,7 @@ function reloadDetailList() {
 			redrawList1(result.data);
 			replylist(result.replylist);
 			redrawreplyPaging(result.rppb);
+			replyCnt(result.recnt);
 			redrawPaging(result.pb);
 		},
 		error:function(request,status,error) {
@@ -237,7 +312,6 @@ function reloadDetailList() {
 
 function redrawList(list) {
 	var html ="";
-	console.log(list);
 	if(list.length == 0 ) {
 		html += "<tr>";
 		html += "<td colspan=\"2\">조회된 데이터가 없습니다.</td>";
@@ -436,9 +510,10 @@ function redrawPaging(pb) {
 					
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
 					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
-					<input type="hidden" name="searchGbn" value="${param.searchGbn}"/>
-					<input type="hidden" name="searchTxt" value="${param.searchTxt}"/>
+<%-- 					<input type="hidden" name="searchGbn" value="${param.searchGbn}"/> --%>
+<%-- 					<input type="hidden" name="searchTxt" value="${param.searchTxt}"/> --%>
 					<div class="search_area">
 						<select name="searchGbn" style="height: 100%;">
 							<option value="0">제목</option>
@@ -494,7 +569,11 @@ function redrawPaging(pb) {
 		<div class="Blog_Comments_area">
 			<div class="Blog_Comments_Button" id="Comments_show">
 				<img style="width : 30px; height : 30px;"alt="comments_button" src="resources/images/blog/comment.PNG">
-				<div class="Blog_Comments_text"><span id="Blog_Comments_show">댓글 보기</span> ( <span>0</span> )</div>
+				<div class="Blog_Comments_text">
+				<span id="Blog_Comments_show">댓글 보기</span>
+				 (<span class="Blog_Comments_Cnt"> </span>)
+				 
+				 </div>
 				
 			</div>
 			<div class="Blog_Comments_show">
@@ -515,7 +594,8 @@ function redrawPaging(pb) {
 					<form action="#" id="replyForm" method="post">
 						<c:choose>
 							<c:when test="${!empty sBmNo}">
-							<input type="hidden" name="no" id="no" value="${param.no}"/>
+							<input type="hidden" name="rno" id="rno" value="${param.no}"/>
+							<input type="hidden" name="replyno" id="replyno" value=""/>
 								<textarea class="Blog_Comments_textbox" name="Comment_textarea" id="Comment_textarea"></textarea>
 								<div class="Blog_Comments_textbox_cnt_area">
 									<span class="Comment_cnt">0</span>/200 &nbsp;&nbsp;

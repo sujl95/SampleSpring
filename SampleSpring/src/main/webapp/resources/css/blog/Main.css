@@ -599,4 +599,7 @@ html , body {
 	margin-right : 80px;
 }
 
-
+/* 댓글 버튼 */
+.reply_del {
+	float:right;
+}

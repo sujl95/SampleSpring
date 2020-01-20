@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원수정</title>
+<title>SLOG 회원수정</title>
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <!-- jQuery js 파일 -->
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>
@@ -58,7 +58,7 @@ $(document).ready(function() {
 				success:function(result) {
 					if(result.res=="SUCCESS") {
 						alert("회원정보 수정을 성공 하였습니다");
-						location.href = "aList";
+						location.href = "blog_Main";
 					} else {
 						alert("회원정보 수정을 실패 하였습니다");
 					}

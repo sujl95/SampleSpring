@@ -42,8 +42,8 @@ $(document).ready(function() {
 		 $(".setting_area")
 	     .addClass("on")
 		 .css({
-	       left: "672px",
-	       top: "37px"
+	       left: "888px",
+	       top: "39px"
 	     });
 		}
 		 else {

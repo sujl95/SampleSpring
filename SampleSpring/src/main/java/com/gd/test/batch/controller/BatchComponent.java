@@ -22,9 +22,9 @@ public class BatchComponent {
 	
 	
 	
-	@Scheduled(cron = "0/5 14 10 * * *") //10시 15분 5초마다
-//	@Scheduled(cron = "0 0 0 * * *") 
+//	@Scheduled(cron = "0/5 14 10 * * *") //10시 15분 5초마다
+	@Scheduled(cron = "0 0 0/1 * * *") 
 	public void cronTest1() {
-		System.out.println("batch!!");
+		System.out.println("배치 프로그램 구동중");
 	}
 }

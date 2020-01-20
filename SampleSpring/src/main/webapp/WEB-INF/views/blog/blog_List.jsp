@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SLOG List</title>
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <link rel="stylesheet" type="text/css" href="resources/css/blog/btn.css" />
 <!-- jQuery js 파일 -->
@@ -22,12 +22,12 @@ $(document).ready(function() {
 	Categet();
 	/* 댓글등록 */
 	$("#Comment_add").on("click", function() {
-			var params = $("#replyForm").serialize();
+			var params = $("#replyForm").serialize() + "&" + $("#actionForm").serialize();
 			$.ajax({ 
 				type : "post",
 				url : "blogReplyRegisterAjax",
 				dataType :"json",
-				data : params,
+				data : params ,
 				success:function(result) {
 					if(result.res=="SUCCESS") {
 // 						alert("등록되었습니다.");
@@ -80,6 +80,7 @@ $(document).ready(function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
 			$("#page").val($(this).attr("name"));
+			
 			reloadList();	
 		}
 	});
@@ -89,7 +90,7 @@ $(document).ready(function() {
 		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
 			$("#replypage").val($(this).attr("name"));
-			reloadList();	
+			reloadList();
 		}
 	});
 	/* 수정버튼 클릭시 */
@@ -105,8 +106,10 @@ $(document).ready(function() {
 	/* 게시글목록 게시글 클릭시 */
 	$("tbody").on("click","tr",function() {
 		$("#no").val($(this).attr("name"));
+		$("#rno").val($("#no").val());
 		if($(this).attr("name") != "") {
 			$("#no").val($(this).attr("name"));
+			$("#replypage").val("1");
 			reloadDetailList();
 // 			reloadList();
 		}
@@ -122,7 +125,6 @@ $(document).ready(function() {
 	/* 댓글 카운팅 */
 	$("#Comment_textarea").on("keyup",function() {
 		var content = $(this).val();
-		console.log(content.length);
 	    $('.Comment_cnt').html(content.length);    //글자수 실시간 카운팅
 
 	    if (content.length > 200){
@@ -212,6 +214,8 @@ $(document).ready(function() {
 		$("#page").val("1");
 		reloadList();
 	});
+	
+	
 });
 
 var flag = false;
@@ -284,15 +288,17 @@ function reloadList() {
 		}
 		
 	});
+	
 }
 
 function reloadDetailList() {
 	var params = $("#actionForm").serialize();
+	console.log(params);
 	$.ajax({ 
 		type : "post",
 		url : "blogDetailAjax",
 		dataType :"json",
-		data : params,
+		data : params, 
 		success:function(result) {
 			redrawList(result.list);
 			redrawList1(result.data);
@@ -515,16 +521,8 @@ function redrawPaging(pb) {
 <%-- 					<input type="hidden" name="searchGbn" value="${param.searchGbn}"/> --%>
 <%-- 					<input type="hidden" name="searchTxt" value="${param.searchTxt}"/> --%>
 					<div class="search_area">
-						<select name="searchGbn" style="height: 100%;">
-							<option value="0">제목</option>
-							<option value="1">작성자</option>
-							<option value="2">제목 + 작성자</option>
-						</select>
-						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
-						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
-					
 					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
+						<input type="button" value="글쓰기" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
 					</div>
 				</form>
@@ -616,13 +614,9 @@ function redrawPaging(pb) {
 		<div class="btn_area" style="margin-right: 40px;">
 			<c:choose>
 				<c:when test="${sBmNo eq param.bmno}"> 
-					<input type="button" class="btn" value="목록" id="listBtn"/>
 					<input type="button" class="btn" value="수정" id="updateBtn"/>
 					<input type="button" class="btn" value="삭제" id="deleteBtn"/>
 				</c:when>
-				<c:otherwise>
-				 	<input type="button" class="btn" value="목록" id="listBtn"/>
-				</c:otherwise>
 			</c:choose>
 		</div>
 	</div>

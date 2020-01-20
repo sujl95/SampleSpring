@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SLOG 회원가입</title>
 <!-- jQuery js 파일 -->
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <script type="text/javascript" src="resources/script/jquery/jquery-1.12.4.min.js"></script>

@@ -34,20 +34,6 @@
 		= 1) B INNER JOIN (SELECT * FROM (SELECT ROW_NUMBER() OVER(PARTITION BY BM_NO ORDER BY B_NO DESC) 
 		AS RNK ,BM_NO,B_NO FROM BLOG_B B WHERE DEL_YN = 1 GROUP BY BM_NO,B_NO) WHERE RNK =1 ) BM ON 
 		B.B_NO = BM.B_NO )
-		<if test="searchTxt != null and searchTxt != ''">
-			<choose>
-				<when test="searchGbn eq 0">
-					AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 1">
-					AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 2">
-					AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-		    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
-				</when>
-			</choose>
-		</if>
 	</select>
 	<!-- 블로그 카테 OR 글 갯수 -->
 	<select id="getBlogCnt" parameterType="hashmap" resultType="Integer">
@@ -111,20 +97,6 @@
 	</select>
 	<!-- 블로그 메인 리스트 가져오기  -->
 	<select id="getBlog" parameterType="hashmap" resultType="hashmap">
-<!-- 			<if test="searchTxt != null and searchTxt != ''"> -->
-<!-- 				<choose> -->
-<!-- 					<when test="searchGbn eq 0"> -->
-<!-- 						AND B.B_TITLE LIKE '%' || #{searchTxt} || '%' -->
-<!-- 					</when> -->
-<!-- 					<when test="searchGbn eq 1"> -->
-<!-- 						AND BM.BM_NM LIKE '%' || #{searchTxt} || '%' -->
-<!-- 					</when> -->
-<!-- 					<when test="searchGbn eq 2"> -->
-<!-- 						AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%' -->
-<!-- 			    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%') -->
-<!-- 					</when> -->
-<!-- 				</choose> -->
-<!-- 			</if> -->
 		SELECT B.B_NO, B.B_TITLE,B.B_CON,B.BM_NM,B.B_DT,B.B_HIT,BM.BM_NO
 		FROM(SELECT B.B_NO,B.B_TITLE,B.B_CON,BM.BM_NM,BM.BM_NO,(TO_CHAR( B.B_DT,'YYYY')||'년 '||TO_CHAR( B.B_DT,'MM')||'월 '
 						||TO_CHAR( B.B_DT,'DD')||'일 '||TO_CHAR( B.B_DT,'HH')||'시 '||TO_CHAR( B.B_DT,'MI')||'분 ') AS B_DT ,B.B_HIT, ROW_NUMBER() OVER(ORDER BY
@@ -174,20 +146,6 @@
 		      	<if test="cate_no != '' and cate_no != 0">
 					 AND CT_NAME = #{cate_no}
 				</if>
-		        <if test="searchTxt != null and searchTxt != ''">
-					<choose>
-						<when test="searchGbn eq 0">
-							AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-						</when>
-						<when test="searchGbn eq 1">
-							AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
-						</when>
-						<when test="searchGbn eq 2">
-							AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-				    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
-						</when>
-					</choose>
-				</if>
 		    )B
 		WHERE B.RNUM BETWEEN #{startCnt} AND #{endCnt}
 		      
@@ -200,21 +158,7 @@
 		                AND BM.DEL_YN = 1
 		WHERE B.DEL_YN = 1
 		
-		<if test="searchTxt != null and searchTxt != ''">
-			<choose>
-				<when test="searchGbn eq 0">
-					AND B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 1">
-					AND BM.BM_NM LIKE '%' || #{searchTxt} || '%'
-				</when>
-				<when test="searchGbn eq 2">
-					AND (B.B_TITLE LIKE '%' || #{searchTxt} || '%'
-		    			OR BM.BM_NM LIKE '%' || #{searchTxt} || '%')
-				</when>
-			</choose>
-		</if>
-	</select>
+			</select>
 	
 	<!-- 상세보기 조회 -->
 	<select id="getData" parameterType="hashmap" resultType="hashmap">

@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SLOG Main</title>
 <!-- Main css -->
 <link rel="stylesheet" type="text/css" href="resources/css/blog/Main.css" />
 <!-- btn -->
@@ -20,12 +20,11 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	reloadList();
-// 	Categet();
+	Categet();
 	
 	
 	
 	$(".paging_area").on("click", "span", function() {
-		console.log($(this).attr("name"));
 		if($(this).attr("name") != "") {
 			$("#page").val($(this).attr("name"));
 			reloadList();	
@@ -36,11 +35,8 @@ $(document).ready(function() {
 	$(".table_area").on("click", ".Blog_contents_area", function() {
 		var arr = [];
 		arr = $(this).attr("name").split(",");
-		console.log(arr);
 		$("#bmno").val(arr[0]);
 		$("#no").val(arr[1]);
-		console.log($("#bmno").val());
-		console.log($("#no").val());
 		$("#actionForm").attr("action","blog_List");
 		$("#actionForm").submit();
 	});
@@ -58,6 +54,7 @@ function reloadList() {
 		success:function(result) {
 			redrawList(result.list);
 			redrawPaging(result.pb);
+			
 		},
 		error:function(request,status,error) {
 			console.log("status :" + request.status); //상태코드
@@ -139,9 +136,9 @@ function redrawPaging(pb) {
 		</h1>
 	</div>
 	<div class="category">
-		<ul class="category_list">
+<!-- 		<ul class="category_list"> -->
 			
-		</ul>
+<!-- 		</ul> -->
 	</div>
 </div>
 <div class="whole_body">
@@ -152,18 +149,10 @@ function redrawPaging(pb) {
 				 <form action="#" id="actionForm" method="post">
 					<input type="hidden" name="page" id="page" value="1"/>
 					<input type="hidden" name="no" id="no" value="${param.no}"/>
-					<input type="hidden" name="bmno" id="bmno" value="${param.bmno}"/>
+					<input type="hidden" name="bmno" id="bmno" value="${sBmNo}"/>
 					<input type="hidden" name="bm_no" id="bm_no" value="${sBmNo}"/>
 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/>
 					<div class="search_area">
-<!-- 						<select name="searchGbn" style="height: 100%;"> -->
-<!-- 							<option value="0">제목</option> -->
-<!-- 							<option value="1">작성자</option> -->
-<!-- 							<option value="2">제목 + 작성자</option> -->
-<!-- 						</select> -->
-<!-- 						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/> -->
-<!-- 						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/> -->
-					
 					<c:if test="${!empty sBmNo}">
 						<input type="button" value="글쓰기" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
 					</c:if>
@@ -186,9 +175,6 @@ function redrawPaging(pb) {
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
-<!-- 				<span>내 블로그</span>&nbsp; | &nbsp; -->
-<!-- 				<span>이웃블로그</span>&nbsp; | &nbsp; -->
-<!-- 				<span>블로그 홈</span>&nbsp; | &nbsp; -->
 			</div>
 		</div>
 	</div>

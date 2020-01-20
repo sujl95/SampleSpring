@@ -363,7 +363,6 @@ public class BlogController {
 		
 		int cnt = iBlogService.getBlogCnt(params);
 		int recnt = iBlogService.getBlogReplyCnt(params);
-		System.out.println("recnt =>" +recnt);
 		PagingBean pb = iPagingService.getPagingBean(Integer.parseInt(params.get("page")), cnt,10,5);
 		PagingBean rppb = iPagingService.getPagingBean(Integer.parseInt(params.get("replypage")), recnt,10,5);
 		System.out.println("rppb =>" +rppb.getStartPcount());

@@ -32,20 +32,20 @@ $(document).ready(function() {
 		$("#actionForm").submit();
 	});
 	
-	$(".setting").on("click",function(e) {
-		if($(".setting_area").css("display") == "none"){ 
-		 $(".setting_area")
-	     .addClass("on")
-		 .css({
-	       left: "672px",
-	       top: "37px"
-	     });
-		}
-		 else {
-			 $(".setting_area")
-		     .removeClass("on");
-		 }
-	});
+// 	$(".setting").on("click",function(e) {
+// 		if($(".setting_area").css("display") == "none"){ 
+// 		 $(".setting_area")
+// 	     .addClass("on")
+// 		 .css({
+// 	       left: "672px",
+// 	       top: "37px"
+// 	     });
+// 		}
+// 		 else {
+// 			 $(".setting_area")
+// 		     .removeClass("on");
+// 		 }
+// 	});
 	CKEDITOR.replace("con", {
 		resize_enabled : false,
 		language : "ko", 
@@ -70,12 +70,12 @@ $(document).ready(function() {
 		} else {
 			//jQuery 활용
 			var params = $("#actionForm").serialize(); //serialize폼안에 값 전달()
-			
+			var params1 = $("#replyForm").serialize();
 			$.ajax({
 				type : "post", //데이터 전송방식
 				url : "bWriteAjax", //주소
 				dataType :"json", //데이터 전송규격
-				data : params, //보낼 데이터
+				data : params , params1, //보낼 데이터
 				//{키 : 값, 키 : 값,...} -> json
 				success : function(result) {
 					if(result.res=="SUCCESS") {
@@ -83,6 +83,9 @@ $(document).ready(function() {
 
 						$("#actionForm").attr("action","blog_List");
 						$("#actionForm").submit();
+						$("#replyForm").attr("action","blog_List");
+						$("#replyForm").submit();
+						
 					} else {
 						alert("등록에 실패하였습니다");
 					}
@@ -231,17 +234,9 @@ function blog_write(data) {
 <%-- 					<input type="hidden" name="cate_no" id="cate_no" value="${param.cate_no}"/> --%>
 					
 					<div class="search_area">
-						<select name="searchGbn" style="height: 100%;">
-							<option value="0">제목</option>
-							<option value="1">작성자</option>
-							<option value="2">제목 + 작성자</option>
-						</select>
-						<input type="text" name="searchTxt"  style="height: calc(100% - 6px); vertical-align: top;"/>
-						<input type="button" value="검색" id="searchBtn"  style="height: 100%;"/>
-					
-					<c:if test="${!empty sBmNo}">
-						<input type="button" value="등록" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
-					</c:if>
+						<c:if test="${!empty sBmNo}">
+							<input type="button" value="글쓰기" id="writeBtn" style="height: calc(100%); vertical-align: top;"/>
+						</c:if>
 					</div>
 <!-- 				</form> -->
 			</div>
@@ -261,9 +256,9 @@ function blog_write(data) {
 					<input type="button" id="joinBtn" value="회원가입">
 				</c:otherwise>
 			</c:choose>
-				<span>내 블로그</span>&nbsp; | &nbsp;
-				<span>이웃블로그</span>&nbsp; | &nbsp;
-				<span>블로그 홈</span>&nbsp; | &nbsp;
+<!-- 				<span>내 블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>이웃블로그</span>&nbsp; | &nbsp; -->
+<!-- 				<span>블로그 홈</span>&nbsp; | &nbsp; -->
 			</div>
 		</div>
 	</div>	
